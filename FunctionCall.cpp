@@ -10,6 +10,11 @@ FunctionCall::FunctionCall(const QString &functionName, PainterContext* context)
 {
 }
 
+FunctionCall::~FunctionCall()
+{
+	qDeleteAll(m_parameters);
+}
+
 void FunctionCall::addParameter(Expression* expression)
 {
 	m_parameters.append(expression);

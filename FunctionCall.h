@@ -11,6 +11,7 @@ class FunctionCall : public ASTNode
 {
 public:
 	FunctionCall(const QString &functionName, PainterContext* context);
+	~FunctionCall();
 
 	virtual QVariant evaluate();
 

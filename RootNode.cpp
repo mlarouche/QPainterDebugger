@@ -5,6 +5,11 @@ RootNode::RootNode()
 {
 }
 
+RootNode::~RootNode()
+{
+	qDeleteAll(m_children);
+}
+
 void RootNode::addChild(ASTNode *child)
 {
 	m_children.append(child);

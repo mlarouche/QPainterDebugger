@@ -9,6 +9,7 @@ class RootNode : public ASTNode
 {
 public:
 	RootNode();
+	~RootNode();
 
 	virtual QVariant evaluate();
 

@@ -55,4 +55,6 @@ void QPainterDebuggerMainWindow::buttonDebug_Clicked()
 
 		ui->labelGraphicPreview->setPixmap(QPixmap::fromImage(resultImage));
 	}
+
+	delete rootNode;
 }
