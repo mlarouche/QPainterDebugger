@@ -28,6 +28,16 @@ public:
 
 	Token lookAhead();
 
+	int currentLine() const
+	{
+		return m_currentLine;
+	}
+
+	int currentColumn() const
+	{
+		return m_currentColumn;
+	}
+
 private:
 	QChar consumeChar();
 
@@ -36,6 +46,8 @@ private:
 	QVariant m_lastValue;
 	quint32 m_charIndex;
 	QChar m_lastChar;
+	int m_currentLine;
+	int m_currentColumn;
 };
 
 #endif

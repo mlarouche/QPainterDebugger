@@ -1,7 +1,7 @@
 #include "Lexer.h"
 
 Lexer::Lexer(const QString &sourceText)
-: m_sourceText(sourceText), m_charIndex(0), m_lastChar(' ')
+	: m_sourceText(sourceText), m_charIndex(0), m_lastChar(' '), m_currentLine(0), m_currentColumn(0)
 {
 }
 
@@ -10,6 +10,11 @@ Lexer::Token Lexer::getNextToken()
 	while(m_lastChar.isSpace())
 	{
 		m_lastChar = consumeChar();
+		if(m_lastChar == '\n')
+		{
+			m_currentLine++;
+			m_currentColumn = 0;
+		}
 	}
 
 	if(m_lastChar.isDigit())
@@ -98,12 +103,16 @@ Lexer::Token Lexer::lookAhead()
 	QVariant tempLastValue = m_lastValue;
 	quint32 tempCharIndex = m_charIndex;
 	QChar tempLastChar = m_lastChar;
+	int tempCurrentLine = m_currentLine;
+	int tempCurrentColumn = m_currentColumn;
 
 	Lexer::Token token = getNextToken();
 
 	m_lastValue = tempLastValue;
 	m_charIndex = tempCharIndex;
 	m_lastChar = tempLastChar;
+	m_currentLine = tempCurrentLine;
+	m_currentColumn = tempCurrentColumn;
 
 	return token;
 }
@@ -117,6 +126,7 @@ QChar Lexer::consumeChar()
 
 	QChar readChar = m_sourceText[m_charIndex];
 	m_charIndex++;
+	m_currentColumn++;
 
 	if( m_charIndex > m_sourceText.length() )
 	{

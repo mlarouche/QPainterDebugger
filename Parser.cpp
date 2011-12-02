@@ -18,6 +18,16 @@ Parser::~Parser()
 	delete lexer;
 }
 
+bool Parser::hasError() const
+{
+	return !m_errorMessage.isEmpty();
+}
+
+QString Parser::errorMessage() const
+{
+	return QString("Error at %1:%2: %3").arg(lexer->currentLine()).arg(lexer->currentColumn()).arg(m_errorMessage);
+}
+
 void Parser::setContext(PainterContext *context)
 {
 	m_context = context;
@@ -40,13 +50,19 @@ ASTNode* Parser::parse(const QString& sourceText)
 	}
 	lexer = new Lexer(sourceText);
 
-	// root ::= statement*
+	// root ::= statement* EOF
 	qDebug("root");
 	RootNode* root = new RootNode;
 
 	while(m_token != Lexer::EndOfFile)
 	{
-		root->addChild(parseStatement());
+		ASTNode* child = parseStatement();
+		if (!child)
+		{
+			return 0;
+		}
+
+		root->addChild(child);
 
 		// Check for end of file token
 		if(lexer->lookAhead() == Lexer::EndOfFile)
@@ -73,11 +89,18 @@ ASTNode* Parser::parseFunctionCall()
 
 	if(m_token != Lexer::Identifier)
 	{
+		m_errorMessage = "Function name expected";
 		// TODO: Error
 		return 0;
 	}
 
 	QString functionName = lexer->lastReadValue().toString();
+
+	if(!m_context->isValidFunction(functionName))
+	{
+		m_errorMessage = QString("%1 is not defined").arg(functionName);
+		return 0;
+	}
 
 	FunctionCall* functionCall = new FunctionCall(functionName, m_context);
 
@@ -108,7 +131,7 @@ Expression* Parser::parseExpression()
 		case Lexer::Identifier:
 			return new IdentifierExpression(lexer->lastReadValue().toString(), m_context);
 		default:
-			//TODO: SetError() !
+			m_errorMessage = "Invalid expression found !";
 			qDebug("Token %d not expected here", (int)m_token);
 			break;
 	}

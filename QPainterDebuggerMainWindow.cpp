@@ -49,6 +49,12 @@ void QPainterDebuggerMainWindow::buttonDebug_Clicked()
 
 	ASTNode* rootNode = parser.parse(readCode);
 
+	if(parser.hasError())
+	{
+		QMessageBox::critical(this, "Error", parser.errorMessage());
+		return;
+	}
+
 	if(rootNode)
 	{
 		rootNode->evaluate();

@@ -19,6 +19,10 @@ public:
 
 	ASTNode* parse(const QString& sourceText);
 
+	bool hasError() const;
+
+	QString errorMessage() const;
+
 private:
 	Expression* parseExpression();
 	ASTNode* parseStatement();
@@ -31,6 +35,7 @@ private:
 	Lexer* lexer;
 	PainterContext* m_context;
 	Lexer::Token m_token;
+	QString m_errorMessage;
 };
 
 #endif
