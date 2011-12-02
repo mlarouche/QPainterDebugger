@@ -14,7 +14,7 @@ Lexer::Token Lexer::getNextToken()
 
 	if(m_lastChar.isDigit())
 	{
-		qDebug("NumberLiteral");
+		qDebug("NUMBER_LITERAL");
 
 		QString numberLiteral;
 
@@ -30,7 +30,7 @@ Lexer::Token Lexer::getNextToken()
 	}
 	else if(m_lastChar == '"')
 	{
-		qDebug("StringLiteral");
+		qDebug("STRING_LITERAL");
 
 		m_lastChar = consumeChar();
 
@@ -48,25 +48,25 @@ Lexer::Token Lexer::getNextToken()
 	}
 	else if(m_lastChar == '(')
 	{
-		qDebug("LeftParenthesis");
+		qDebug("LEFT_PARENTHESIS");
 		m_lastChar = consumeChar();
 		return Lexer::LeftParenthesis;
 	}
 	else if(m_lastChar == ')')
 	{
-		qDebug("RightParenthesis");
+		qDebug("RIGHT_PARENTHESIS");
 		m_lastChar = consumeChar();
 		return Lexer::RightParenthesis;
 	}
 	else if(m_lastChar == ',')
 	{
-		qDebug("Comma");
+		qDebug("COMMA");
 		m_lastChar = consumeChar();
 		return Lexer::Comma;
 	}
 	else if(m_lastChar.isLetter())
 	{
-		qDebug("Identifier");
+		qDebug("IDENTIFIER");
 
 		QString identifier;
 
@@ -80,8 +80,32 @@ Lexer::Token Lexer::getNextToken()
 		m_lastValue = identifier;
 		return Lexer::Identifier;
 	}
+	else
+	{
+		if (m_charIndex == -1)
+		{
+			qDebug("EOF");
+			return Lexer::EndOfFile;
+		}
 
-	return Lexer::Invalid;
+		qDebug("Invalid token found !");
+		return Lexer::Invalid;
+	}
+}
+
+Lexer::Token Lexer::lookAhead()
+{
+	QVariant tempLastValue = m_lastValue;
+	quint32 tempCharIndex = m_charIndex;
+	QChar tempLastChar = m_lastChar;
+
+	Lexer::Token token = getNextToken();
+
+	m_lastValue = tempLastValue;
+	m_charIndex = tempCharIndex;
+	m_lastChar = tempLastChar;
+
+	return token;
 }
 
 QChar Lexer::consumeChar()

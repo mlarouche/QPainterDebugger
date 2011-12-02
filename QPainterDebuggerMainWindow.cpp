@@ -3,9 +3,13 @@
 
 // Qt includes
 #include <QtGui/QMessageBox>
+#include <QtGui/QPainter>
 
 // Local includess
 #include "Lexer.h"
+#include "Parser.h"
+#include "PainterContext.h"
+#include "DrawTextCommand.h"
 
 QPainterDebuggerMainWindow::QPainterDebuggerMainWindow(QWidget *parent)
 : QMainWindow(parent),ui(new Ui::QPainterDebuggerMainWindow)
@@ -29,14 +33,26 @@ void QPainterDebuggerMainWindow::connectSlots()
 
 void QPainterDebuggerMainWindow::buttonDebug_Clicked()
 {
+	QImage resultImage(ui->labelGraphicPreview->width(),ui->labelGraphicPreview->height(), QImage::Format_ARGB32);
+	resultImage.fill(0);
+	QPainter painter(&resultImage);
+
 	QString readCode = ui->textEditCode->toPlainText();
 
-	Lexer lexer(readCode);
+	PainterContext context;
+	context.setVariable("boba", 6667);
+	context.setPainter(&painter);
+	context.setFunction("drawText", new DrawTextCommand);
 
-	Lexer::Token token = lexer.getNextToken();
-	while(token != Lexer::Invalid)
+	Parser parser;
+	parser.setContext(&context);
+
+	ASTNode* rootNode = parser.parse(readCode);
+
+	if(rootNode)
 	{
-		QMessageBox::information(this, "DEBUG", QString("Type=%1,Value=%2").arg(token).arg(lexer.lastReadValue().toString()));
-		token = lexer.getNextToken();
+		rootNode->evaluate();
+
+		ui->labelGraphicPreview->setPixmap(QPixmap::fromImage(resultImage));
 	}
 }

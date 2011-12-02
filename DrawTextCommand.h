@@ -9,11 +9,9 @@
 class DrawTextCommand : public PainterCommand
 {
 public:
-    DrawTextCommand();
+	DrawTextCommand();
 
-	QList<Expression>	arguments;
-
-	virtual void execute(QPainter *painter);
+	virtual void execute(QPainter *painter, const QList<Expression*> parameters);
 };
 
-#endif // DRAWTEXTCOMMAND_H
+#endif

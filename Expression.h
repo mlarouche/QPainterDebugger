@@ -1,14 +1,20 @@
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
-#include <QtCore/QVariant>
+#include "ASTNode.h"
 
-class Expression
+class Expression : public ASTNode
 {
 public:
-	Expression();
+	Expression(const QVariant& value);
+	Expression(PainterContext* context);
 
-	virtual QVariant evaluate() = 0;
+	virtual QVariant::Type type() const;
+
+	virtual QVariant evaluate();
+
+private:
+	QVariant m_value;
 };
 
 #endif

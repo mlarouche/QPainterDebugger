@@ -16,16 +16,36 @@ SOURCES += main.cpp\
     PainterCommand.cpp \
     DrawTextCommand.cpp \
     Expression.cpp \
-    Lexer.cpp
+    Lexer.cpp \
+    Parser.cpp \
+    ASTNode.cpp \
+    IdentifierExpression.cpp \
+    FunctionCall.cpp \
+    RootNode.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
     PainterCommand.h \
     DrawTextCommand.h \
     Expression.h \
-    Lexer.h
+    Lexer.h \
+    Parser.h \
+    ASTNode.h \
+    IdentifierExpression.h \
+    FunctionCall.h \
+    RootNode.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
+
+
+
+
+
+
+
+
 
 
 

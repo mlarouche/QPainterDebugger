@@ -10,6 +10,7 @@ public:
 	enum Token
 	{
 		Invalid = 0,
+		EndOfFile,
 		Identifier,
 		StringLiteral,
 		NumberLiteral,
@@ -24,6 +25,8 @@ public:
 	Token getNextToken();
 
 	QVariant lastReadValue() const { return m_lastValue; }
+
+	Token lookAhead();
 
 private:
 	QChar consumeChar();
