@@ -39,7 +39,7 @@ public:
 	}
 
 private:
-	QChar consumeChar();
+	void consumeChar();
 
 private:
 	QString m_sourceText;

@@ -9,12 +9,12 @@ Lexer::Token Lexer::getNextToken()
 {
 	while(m_lastChar.isSpace())
 	{
-		m_lastChar = consumeChar();
 		if(m_lastChar == '\n')
 		{
 			m_currentLine++;
-			m_currentColumn = 0;
+			m_currentColumn = 1234;
 		}
+		consumeChar();
 	}
 
 	if(m_lastChar.isDigit())
@@ -26,7 +26,7 @@ Lexer::Token Lexer::getNextToken()
 		do
 		{
 			numberLiteral += m_lastChar;
-			m_lastChar = consumeChar();
+			consumeChar();
 		}
 		while(m_lastChar.isDigit());
 
@@ -37,16 +37,16 @@ Lexer::Token Lexer::getNextToken()
 	{
 		qDebug("STRING_LITERAL");
 
-		m_lastChar = consumeChar();
+		consumeChar();
 
 		QString stringLiteral;
 		do
 		{
 			stringLiteral += m_lastChar;
-			m_lastChar = consumeChar();
+			consumeChar();
 		}
 		while(m_lastChar != '"');
-		m_lastChar = consumeChar();
+		consumeChar();
 
 		m_lastValue = stringLiteral;
 		return Lexer::StringLiteral;
@@ -54,19 +54,19 @@ Lexer::Token Lexer::getNextToken()
 	else if(m_lastChar == '(')
 	{
 		qDebug("LEFT_PARENTHESIS");
-		m_lastChar = consumeChar();
+		consumeChar();
 		return Lexer::LeftParenthesis;
 	}
 	else if(m_lastChar == ')')
 	{
 		qDebug("RIGHT_PARENTHESIS");
-		m_lastChar = consumeChar();
+		consumeChar();
 		return Lexer::RightParenthesis;
 	}
 	else if(m_lastChar == ',')
 	{
 		qDebug("COMMA");
-		m_lastChar = consumeChar();
+		consumeChar();
 		return Lexer::Comma;
 	}
 	else if(m_lastChar.isLetter())
@@ -78,7 +78,7 @@ Lexer::Token Lexer::getNextToken()
 		do
 		{
 			identifier += m_lastChar;
-			m_lastChar = consumeChar();
+			consumeChar();
 		}
 		while(m_lastChar.isLetterOrNumber());
 
@@ -117,23 +117,22 @@ Lexer::Token Lexer::lookAhead()
 	return token;
 }
 
-QChar Lexer::consumeChar()
+void Lexer::consumeChar()
 {
 	if(m_charIndex == -1)
 	{
-		return QChar();
+		m_lastChar = QChar();
+		return;
 	}
 
-	QChar readChar = m_sourceText[m_charIndex];
+	m_lastChar = m_sourceText[m_charIndex];
 	m_charIndex++;
 	m_currentColumn++;
 
 	if( m_charIndex > m_sourceText.length() )
 	{
 		m_charIndex = -1;
-		return QChar();
+		m_lastChar = QChar();
 	}
-
-	return readChar;
 }
 
