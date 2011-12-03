@@ -110,7 +110,13 @@ ASTNode* Parser::parseFunctionCall()
 	// Parse expression untill we find the right parenthesis
 	while(m_token != Lexer::RightParenthesis)
 	{
-		functionCall->addParameter(parseExpression());
+		Expression *parameter = parseExpression();
+		if(!parameter)
+		{
+			return 0;
+		}
+
+		functionCall->addParameter(parameter);
 		getNextToken();
 	}
 
