@@ -12,7 +12,7 @@ public:
 	PainterCommand();
 	virtual ~PainterCommand();
 
-	virtual void execute(QPainter* painter, const QList<Expression*> parameters) = 0;
+	virtual void execute(QPainter* painter, const QList<Expression*>& parameters) = 0;
 };
 
 #endif

@@ -1,9 +1,7 @@
 #include "FunctionCall.h"
 
 #include "Expression.h"
-
-// TEMP
-#include "DrawTextCommand.h"
+#include "PainterCommand.h"
 
 FunctionCall::FunctionCall(const QString &functionName, PainterContext* context)
 : ASTNode(context), m_functionName(functionName)

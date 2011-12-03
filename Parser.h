@@ -37,6 +37,8 @@ private:
 	PainterContext* m_context;
 	Lexer::Token m_token;
 	QString m_errorMessage;
+	int m_currentLine;
+	int m_currentColumn;
 };
 
 #endif

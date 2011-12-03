@@ -14,7 +14,6 @@ SOURCES += main.cpp\
         QPainterDebuggerMainWindow.cpp \
     PainterContext.cpp \
     PainterCommand.cpp \
-    DrawTextCommand.cpp \
     Expression.cpp \
     Lexer.cpp \
     Parser.cpp \
@@ -27,7 +26,6 @@ SOURCES += main.cpp\
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
     PainterCommand.h \
-    DrawTextCommand.h \
     Expression.h \
     Lexer.h \
     Parser.h \
@@ -38,6 +36,8 @@ HEADERS  += QPainterDebuggerMainWindow.h \
     VariableAssignment.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
 
 
 

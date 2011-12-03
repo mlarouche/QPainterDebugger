@@ -9,7 +9,6 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "PainterContext.h"
-#include "DrawTextCommand.h"
 
 QPainterDebuggerMainWindow::QPainterDebuggerMainWindow(QWidget *parent)
 : QMainWindow(parent),ui(new Ui::QPainterDebuggerMainWindow)
@@ -41,7 +40,6 @@ void QPainterDebuggerMainWindow::buttonDebug_Clicked()
 
 	PainterContext context;
 	context.setPainter(&painter);
-	context.setFunction("drawText", new DrawTextCommand);
 
 	Parser parser;
 	parser.setContext(&context);

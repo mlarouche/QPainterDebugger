@@ -10,7 +10,7 @@
 #include "VariableAssignment.h"
 
 Parser::Parser()
-: lexer(0), m_context(0)
+: lexer(0), m_context(0), m_currentLine(0), m_currentColumn(0)
 {
 }
 
@@ -26,7 +26,7 @@ bool Parser::hasError() const
 
 QString Parser::errorMessage() const
 {
-	return QString("Error at %1:%2: %3").arg(lexer->currentLine()).arg(lexer->currentColumn()).arg(m_errorMessage);
+	return QString("Error at %1:%2: %3").arg(m_currentLine).arg(m_currentColumn).arg(m_errorMessage);
 }
 
 void Parser::setContext(PainterContext *context)
@@ -38,6 +38,8 @@ void Parser::getNextToken()
 {
 	if(lexer)
 	{
+		m_currentLine = lexer->currentLine();
+		m_currentColumn = lexer->currentColumn();
 		m_token = lexer->getNextToken();
 	}
 }
