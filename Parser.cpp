@@ -7,6 +7,7 @@
 #include "Lexer.h"
 #include "IdentifierExpression.h"
 #include "RootNode.h"
+#include "VariableAssignment.h"
 
 Parser::Parser()
 : lexer(0), m_context(0)
@@ -76,15 +77,27 @@ ASTNode* Parser::parse(const QString& sourceText)
 
 ASTNode* Parser::parseStatement()
 {
+	// statement ::= functionCall | variableAssignment
 	qDebug("statement");
-	// statement ::= functionCall
-	return parseFunctionCall();
+
+	Lexer::Token lookAhead = lexer->lookAhead();
+
+	switch(lookAhead)
+	{
+		case Lexer::Identifier:
+			return parseFunctionCall();
+		case Lexer::Keyword_var:
+			return parseVariableAssignment();
+		default:
+			m_errorMessage = "You can only use statements here.";
+			return 0;
+	}
 }
 
 ASTNode* Parser::parseFunctionCall()
 {
-	qDebug("functionCall");
 	// functionCall ::= IDENTIFIER '(' expression? (',' expression)* ')'
+	qDebug("functionCall");
 	getNextToken();
 
 	if(m_token != Lexer::Identifier)
@@ -113,6 +126,7 @@ ASTNode* Parser::parseFunctionCall()
 		Expression *parameter = parseExpression();
 		if(!parameter)
 		{
+			delete functionCall;
 			return 0;
 		}
 
@@ -123,12 +137,39 @@ ASTNode* Parser::parseFunctionCall()
 	return functionCall;
 }
 
+ASTNode* Parser::parseVariableAssignment()
+{
+	qDebug("variableAssignment");
+	// variableAssignment ::= 'var' IDENTIFIER '=' expression
+
+	// Eat 'var' token
+	getNextToken();
+
+	// Parse variable name
+	getNextToken();
+	QString variableName = lexer->lastReadValue().toString();
+
+	// Eat '='
+	getNextToken();
+
+	// Parse expression
+	Expression* expression = parseExpression();
+	if(!expression)
+	{
+		m_errorMessage = "You can only assign an expression to a variable";
+		return 0;
+	}
+
+	return new VariableAssignment(variableName, expression, m_context);
+}
+
 Expression* Parser::parseExpression()
 {
+	// expression ::= NUMBERLITERAL | STRINGLITERAL | IDENTIFIER
+
 	qDebug("expression");
 	getNextToken();
 
-	// expression ::= NUMBERLITERAL | STRINGLITERAL | IDENTIFIER
 	switch(m_token)
 	{
 		case Lexer::NumberLiteral:

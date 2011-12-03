@@ -10,6 +10,10 @@ Expression::Expression(PainterContext *context)
 {
 }
 
+Expression::~Expression()
+{
+}
+
 QVariant::Type Expression::type() const
 {
 	return m_value.type();

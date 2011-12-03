@@ -9,6 +9,7 @@ class ASTNode
 {
 public:
 	ASTNode();
+	virtual ~ASTNode();
 
 	ASTNode(PainterContext* context)
 	{

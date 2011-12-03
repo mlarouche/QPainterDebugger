@@ -27,6 +27,7 @@ private:
 	Expression* parseExpression();
 	ASTNode* parseStatement();
 	ASTNode* parseFunctionCall();
+	ASTNode* parseVariableAssignment();
 
 private:
 	void getNextToken();

@@ -1,5 +1,15 @@
 #include "Lexer.h"
 
+struct KeywordPair
+{
+	const char* keyword;
+	Lexer::Token token;
+};
+
+KeywordPair Keywords[] = {
+	{"var", Lexer::Keyword_var}
+};
+
 Lexer::Lexer(const QString &sourceText)
 	: m_sourceText(sourceText), m_charIndex(0), m_lastChar(' '), m_currentLine(0), m_currentColumn(0)
 {
@@ -12,7 +22,7 @@ Lexer::Token Lexer::getNextToken()
 		if(m_lastChar == '\n')
 		{
 			m_currentLine++;
-			m_currentColumn = 1234;
+			m_currentColumn = 0;
 		}
 		consumeChar();
 	}
@@ -51,37 +61,27 @@ Lexer::Token Lexer::getNextToken()
 		m_lastValue = stringLiteral;
 		return Lexer::StringLiteral;
 	}
-	else if(m_lastChar == '(')
-	{
-		qDebug("LEFT_PARENTHESIS");
-		consumeChar();
-		return Lexer::LeftParenthesis;
-	}
-	else if(m_lastChar == ')')
-	{
-		qDebug("RIGHT_PARENTHESIS");
-		consumeChar();
-		return Lexer::RightParenthesis;
-	}
-	else if(m_lastChar == ',')
-	{
-		qDebug("COMMA");
-		consumeChar();
-		return Lexer::Comma;
-	}
 	else if(m_lastChar.isLetter())
 	{
-		qDebug("IDENTIFIER");
-
 		QString identifier;
 
 		do
 		{
 			identifier += m_lastChar;
+
+			Lexer::Token keyword = isKeyword(identifier);
+			if(keyword != Lexer::Invalid)
+			{
+				qDebug("KEYWORD");
+				consumeChar();
+				return keyword;
+			}
+
 			consumeChar();
 		}
 		while(m_lastChar.isLetterOrNumber());
 
+		qDebug("IDENTIFIER");
 		m_lastValue = identifier;
 		return Lexer::Identifier;
 	}
@@ -93,8 +93,34 @@ Lexer::Token Lexer::getNextToken()
 			return Lexer::EndOfFile;
 		}
 
-		qDebug("Invalid token found !");
-		return Lexer::Invalid;
+		Lexer::Token token;
+
+		switch(m_lastChar.toLatin1())
+		{
+			case '(':
+				qDebug("LEFT_PARENTHESIS");
+				token = Lexer::LeftParenthesis;
+				break;
+			case ')':
+				qDebug("RIGHT_PARENTHESIS");
+				token = Lexer::RightParenthesis;
+				break;
+			case ',':
+				qDebug("COMMA");
+				token = Lexer::Comma;
+				break;
+			case '=':
+				qDebug("EQUAL_SIGN");
+				token = Lexer::EqualSign;
+				break;
+			default:
+				qDebug("Invalid token found !");
+				token = Lexer::Invalid;
+				break;
+		}
+
+		consumeChar();
+		return token;
 	}
 }
 
@@ -136,3 +162,17 @@ void Lexer::consumeChar()
 	}
 }
 
+Lexer::Token Lexer::isKeyword(const QString &value) const
+{
+	static int KeywordCount = sizeof(Keywords) / sizeof(KeywordPair);
+
+	for(int i=0; i<KeywordCount; ++i)
+	{
+		if(value == QLatin1String(Keywords[i].keyword))
+		{
+			return Keywords[i].token;
+		}
+	}
+
+	return Lexer::Invalid;
+}

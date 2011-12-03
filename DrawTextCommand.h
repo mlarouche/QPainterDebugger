@@ -10,6 +10,7 @@ class DrawTextCommand : public PainterCommand
 {
 public:
 	DrawTextCommand();
+	virtual ~DrawTextCommand();
 
 	virtual void execute(QPainter *painter, const QList<Expression*> parameters);
 };

@@ -63,6 +63,9 @@
         <property name="text">
          <string>Debug</string>
         </property>
+        <property name="shortcut">
+         <string>Ctrl+D</string>
+        </property>
        </widget>
       </item>
      </layout>

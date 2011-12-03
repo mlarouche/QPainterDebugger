@@ -3,3 +3,7 @@
 PainterCommand::PainterCommand()
 {
 }
+
+PainterCommand::~PainterCommand()
+{
+}

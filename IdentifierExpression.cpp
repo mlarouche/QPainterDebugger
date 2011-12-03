@@ -5,6 +5,10 @@ IdentifierExpression::IdentifierExpression(const QString &identifier, PainterCon
 {
 }
 
+IdentifierExpression::~IdentifierExpression()
+{
+}
+
 QVariant::Type IdentifierExpression::type() const
 {
 	return context()->variable(m_identifier).type();

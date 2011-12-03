@@ -7,6 +7,7 @@ class IdentifierExpression : public Expression
 {
 public:
 	IdentifierExpression(const QString &identifier, PainterContext* context);
+	virtual ~IdentifierExpression();
 
 	virtual QVariant::Type type() const;
 

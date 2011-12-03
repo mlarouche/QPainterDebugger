@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     ASTNode.cpp \
     IdentifierExpression.cpp \
     FunctionCall.cpp \
-    RootNode.cpp
+    RootNode.cpp \
+    VariableAssignment.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
@@ -33,9 +34,12 @@ HEADERS  += QPainterDebuggerMainWindow.h \
     ASTNode.h \
     IdentifierExpression.h \
     FunctionCall.h \
-    RootNode.h
+    RootNode.h \
+    VariableAssignment.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
 
 
 

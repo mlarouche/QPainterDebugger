@@ -4,3 +4,7 @@ ASTNode::ASTNode()
 : m_context(0)
 {
 }
+
+ASTNode::~ASTNode()
+{
+}

@@ -40,7 +40,6 @@ void QPainterDebuggerMainWindow::buttonDebug_Clicked()
 	QString readCode = ui->textEditCode->toPlainText();
 
 	PainterContext context;
-	context.setVariable("boba", 6667);
 	context.setPainter(&painter);
 	context.setFunction("drawText", new DrawTextCommand);
 

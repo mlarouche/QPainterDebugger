@@ -16,7 +16,10 @@ public:
 		NumberLiteral,
 		LeftParenthesis,
 		RightParenthesis,
-		Comma
+		Comma,
+		EqualSign,
+		// Keywords
+		Keyword_var
 	};
 
 public:
@@ -39,6 +42,7 @@ public:
 	}
 
 private:
+	Lexer::Token isKeyword(const QString& value) const;
 	void consumeChar();
 
 private:

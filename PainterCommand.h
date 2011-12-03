@@ -10,6 +10,7 @@ class PainterCommand
 {
 public:
 	PainterCommand();
+	virtual ~PainterCommand();
 
 	virtual void execute(QPainter* painter, const QList<Expression*> parameters) = 0;
 };
