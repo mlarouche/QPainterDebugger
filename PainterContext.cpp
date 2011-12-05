@@ -52,5 +52,10 @@ void PainterContext::bindFunctions()
 	BIND_PAINTER_FUNCTION_4(eraseRect,int,int,int,int);
 	BIND_PAINTER_FUNCTION_0(resetTransform);
 	BIND_PAINTER_FUNCTION_0(restore);
+	BIND_PAINTER_FUNCTION_1(rotate,qreal);
 	BIND_PAINTER_FUNCTION_0(save);
+	BIND_PAINTER_FUNCTION_2(scale,qreal,qreal);
+	BIND_PAINTER_FUNCTION_1(setOpacity,qreal);
+	BIND_PAINTER_FUNCTION_2(shear, qreal,qreal);
+	BIND_PAINTER_FUNCTION_2(translate,qreal,qreal);
 }
