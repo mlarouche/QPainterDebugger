@@ -167,15 +167,16 @@ ASTNode* Parser::parseVariableAssignment()
 
 Expression* Parser::parseExpression()
 {
-	// expression ::= NUMBERLITERAL | STRINGLITERAL | IDENTIFIER
+	// expression ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | IDENTIFIER
 
 	qDebug("expression");
 	getNextToken();
 
 	switch(m_token)
 	{
-		case Lexer::NumberLiteral:
+		case Lexer::IntegerLiteral:
 		case Lexer::StringLiteral:
+		case Lexer::FloatLiteral:
 			return new Expression(lexer->lastReadValue());
 		case Lexer::Identifier:
 			return new IdentifierExpression(lexer->lastReadValue().toString(), m_context);

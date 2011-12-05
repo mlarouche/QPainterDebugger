@@ -29,8 +29,6 @@ Lexer::Token Lexer::getNextToken()
 
 	if(m_lastChar.isDigit())
 	{
-		qDebug("NUMBER_LITERAL");
-
 		QString numberLiteral;
 
 		do
@@ -40,8 +38,25 @@ Lexer::Token Lexer::getNextToken()
 		}
 		while(m_lastChar.isDigit());
 
+		Lexer::Token parsedToken;
+		if(m_lastChar == '.')
+		{
+			do
+			{
+				numberLiteral += m_lastChar;
+				consumeChar();
+			}
+			while(m_lastChar.isDigit());
+			qDebug("FLOAT_LITERAL");
+			parsedToken = Lexer::FloatLiteral;
+		}
+		else
+		{
+			qDebug("INTEGER_LITERAL");
+			parsedToken = Lexer::IntegerLiteral;
+		}
 		m_lastValue = numberLiteral;
-		return Lexer::NumberLiteral;
+		return parsedToken;
 	}
 	else if(m_lastChar == '"')
 	{
