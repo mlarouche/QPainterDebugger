@@ -48,7 +48,7 @@ void QPainterDebuggerMainWindow::buttonDebug_Clicked()
 
 	if(parser.hasError())
 	{
-		QMessageBox::critical(this, "Error", parser.errorMessage());
+		QMessageBox::critical(this, "Parsing error", parser.errorMessage());
 		return;
 	}
 

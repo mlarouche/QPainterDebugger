@@ -16,5 +16,11 @@ QVariant::Type IdentifierExpression::type() const
 
 QVariant IdentifierExpression::evaluate()
 {
+	if(!context()->hasVariable(m_identifier))
+	{
+		showErrorMessage(QString("%1 is not defined.").arg(m_identifier));
+		return QVariant();
+	}
+
 	return context()->variable(m_identifier);
 }

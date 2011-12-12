@@ -23,6 +23,7 @@ public:
 		m_painter = painter;
 	}
 
+	bool hasVariable(const QString &variableName);
 	QVariant variable(const QString &identifier);
 	void setVariable(const QString &identifier, const QVariant &value);
 

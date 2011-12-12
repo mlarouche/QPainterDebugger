@@ -14,6 +14,11 @@ PainterContext::~PainterContext()
 	qDeleteAll(m_functions);
 }
 
+bool PainterContext::hasVariable(const QString &variableName)
+{
+	return m_variables.contains(variableName);
+}
+
 QVariant PainterContext::variable(const QString &identifier)
 {
 	return m_variables.value(identifier);

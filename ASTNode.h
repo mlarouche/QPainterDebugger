@@ -23,26 +23,13 @@ public:
 
 	virtual QVariant evaluate() = 0;
 
-	bool hasError() const
-	{
-		return !m_errorMessage.isEmpty();
-	}
-
-	QString errorMessage() const
-	{
-		return m_errorMessage;
-	}
-
 protected:
 	PainterContext* context() const
 	{
 		return m_context;
 	}
 
-	void setErrorMessage(const QString& message)
-	{
-		m_errorMessage = message;
-	}
+	void showErrorMessage(const QString& message);
 
 private:
 	PainterContext* m_context;

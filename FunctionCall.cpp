@@ -24,6 +24,10 @@ QVariant FunctionCall::evaluate()
 	{
 		context()->function(m_functionName)->execute(context()->painter(), m_parameters);
 	}
+	else
+	{
+		showErrorMessage(QString("%1 is not a valid function name").arg(m_functionName));
+	}
 
 	return QVariant();
 }
