@@ -14,28 +14,40 @@ SOURCES += main.cpp\
         QPainterDebuggerMainWindow.cpp \
     PainterContext.cpp \
     PainterCommand.cpp \
-    Expression.cpp \
     Lexer.cpp \
     Parser.cpp \
     ASTNode.cpp \
     IdentifierExpression.cpp \
     FunctionCall.cpp \
     RootNode.cpp \
-    VariableAssignment.cpp
+    VariableAssignment.cpp \
+    LiteralExpression.cpp \
+    Expression.cpp \
+    BinaryExpression.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
     PainterCommand.h \
-    Expression.h \
     Lexer.h \
     Parser.h \
     ASTNode.h \
     IdentifierExpression.h \
     FunctionCall.h \
     RootNode.h \
-    VariableAssignment.h
+    VariableAssignment.h \
+    LiteralExpression.h \
+    Expression.h \
+    BinaryExpression.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
+
+
+
+
+
+
 
 
 

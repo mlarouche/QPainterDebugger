@@ -24,10 +24,13 @@ public:
 	QString errorMessage() const;
 
 private:
-	Expression* parseExpression();
 	ASTNode* parseStatement();
 	ASTNode* parseFunctionCall();
 	ASTNode* parseVariableAssignment();
+	Expression* parseTerm();
+	Expression* parseMultiplicativeExpression();
+	Expression* parseAdditiveExpression();
+	Expression* parseExpression();
 
 private:
 	void getNextToken();

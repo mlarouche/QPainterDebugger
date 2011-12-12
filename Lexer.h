@@ -19,6 +19,11 @@ public:
 		RightParenthesis,
 		Comma,
 		EqualSign,
+		PlusSign,
+		MinusSign,
+		MulSign,
+		DivSign,
+		ModuloSign,
 		// Keywords
 		Keyword_var
 	};

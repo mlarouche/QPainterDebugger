@@ -128,6 +128,26 @@ Lexer::Token Lexer::getNextToken()
 				qDebug("EQUAL_SIGN");
 				token = Lexer::EqualSign;
 				break;
+			case '+':
+				qDebug("PLUS_SIGN");
+				token = Lexer::PlusSign;
+				break;
+			case '-':
+				qDebug("MINUS_SIGN");
+				token = Lexer::MinusSign;
+				break;
+			case '*':
+				qDebug("MUL_SIGN");
+				token = Lexer::MulSign;
+				break;
+			case '/':
+				qDebug("DIV_SIGN");
+				token = Lexer::DivSign;
+				break;
+			case '%':
+				qDebug("MODULO_SIGN");
+				token = Lexer::ModuloSign;
+				break;
 			default:
 				qDebug("Invalid token found !");
 				token = Lexer::Invalid;

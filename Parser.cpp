@@ -3,11 +3,32 @@
 // Local includes
 #include "ASTNode.h"
 #include "Expression.h"
+#include "BinaryExpression.h"
+#include "LiteralExpression.h"
 #include "FunctionCall.h"
 #include "Lexer.h"
 #include "IdentifierExpression.h"
 #include "RootNode.h"
 #include "VariableAssignment.h"
+
+BinaryExpression::BinaryExpressionType tokenToBinaryExpressionType(Lexer::Token token)
+{
+	switch(token)
+	{
+		case Lexer::PlusSign:
+			return BinaryExpression::Addition;
+		case Lexer::MinusSign:
+			return BinaryExpression::Subtraction;
+		case Lexer::MulSign:
+			return BinaryExpression::Multiplication;
+		case Lexer::DivSign:
+			return BinaryExpression::Division;
+		case Lexer::ModuloSign:
+			return BinaryExpression::Modulo;
+		default:
+			return BinaryExpression::None;
+	}
+}
 
 Parser::Parser()
 : lexer(0), m_context(0), m_currentLine(0), m_currentColumn(0)
@@ -165,26 +186,106 @@ ASTNode* Parser::parseVariableAssignment()
 	return new VariableAssignment(variableName, expression, m_context);
 }
 
-Expression* Parser::parseExpression()
+Expression* Parser::parseTerm()
 {
-	// expression ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | IDENTIFIER
+	// term ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | IDENTIFIER | '(' expression ')'
 
-	qDebug("expression");
+	qDebug("term");
 	getNextToken();
 
 	switch(m_token)
 	{
 		case Lexer::IntegerLiteral:
+			return new LiteralExpression(lexer->lastReadValue().toInt());
 		case Lexer::StringLiteral:
+			return new LiteralExpression(lexer->lastReadValue().toString());
 		case Lexer::FloatLiteral:
-			return new Expression(lexer->lastReadValue());
+			return new LiteralExpression(lexer->lastReadValue().toDouble());
 		case Lexer::Identifier:
 			return new IdentifierExpression(lexer->lastReadValue().toString(), m_context);
+		case Lexer::LeftParenthesis:
+		{
+			Expression *parenthesisExpression = parseExpression();
+
+			// Eat )
+			getNextToken();
+
+			return parenthesisExpression;
+		}
 		default:
-			m_errorMessage = "Invalid expression found !";
+			m_errorMessage = "Invalid term found !";
 			qDebug("Token %d not expected here", (int)m_token);
 			break;
 	}
 
 	return 0;
+}
+
+Expression* Parser::parseMultiplicativeExpression()
+{
+	// multiplicativeExpression ::= term (('*'|'/'|) term)*
+	qDebug("multiplicativeExpression");
+	Expression* left = parseTerm();
+
+	Lexer::Token lookAhead = lexer->lookAhead();
+
+	if(lookAhead == Lexer::MulSign || lookAhead == Lexer::DivSign || lookAhead == Lexer::ModuloSign)
+	{
+		getNextToken();
+		Expression* right = parseTerm();
+
+		Lexer::Token secondLookAhead = lexer->lookAhead();
+		if(secondLookAhead == Lexer::MulSign || secondLookAhead == Lexer::DivSign || secondLookAhead == Lexer::ModuloSign)
+		{
+			getNextToken();
+			BinaryExpression *binOpRight = new BinaryExpression(tokenToBinaryExpressionType(secondLookAhead), right, parseMultiplicativeExpression());
+			return new BinaryExpression(tokenToBinaryExpressionType(lookAhead), left, binOpRight);
+		}
+		else
+		{
+			return new BinaryExpression(tokenToBinaryExpressionType(lookAhead), left, right);
+		}
+	}
+	else
+	{
+		return left;
+	}
+}
+
+Expression* Parser::parseAdditiveExpression()
+{
+	// additiveExpression ::= multiplicativeExpression (('+' | '-') multiplicativeExpression)*
+	qDebug("additiveExpression");
+	Expression* left = parseMultiplicativeExpression();
+
+	Lexer::Token lookAhead = lexer->lookAhead();
+
+	if(lookAhead == Lexer::PlusSign|| lookAhead == Lexer::MinusSign)
+	{
+		getNextToken();
+		Expression* right = parseMultiplicativeExpression();
+
+		Lexer::Token secondLookAhead = lexer->lookAhead();
+		if(secondLookAhead == Lexer::PlusSign || secondLookAhead == Lexer::MinusSign)
+		{
+			getNextToken();
+			BinaryExpression *binOpRight = new BinaryExpression(tokenToBinaryExpressionType(secondLookAhead), right, parseAdditiveExpression());
+			return new BinaryExpression(tokenToBinaryExpressionType(lookAhead), left, binOpRight);
+		}
+		else
+		{
+			return new BinaryExpression(tokenToBinaryExpressionType(lookAhead), left, right);
+		}
+	}
+	else
+	{
+		return left;
+	}
+}
+
+Expression* Parser::parseExpression()
+{
+	// expression :: additiveExpression
+	qDebug("expression");
+	return parseAdditiveExpression();
 }
