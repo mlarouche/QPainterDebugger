@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     VariableAssignment.cpp \
     LiteralExpression.cpp \
     Expression.cpp \
-    BinaryExpression.cpp
+    BinaryExpression.cpp \
+    UnaryExpression.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
@@ -37,9 +38,12 @@ HEADERS  += QPainterDebuggerMainWindow.h \
     VariableAssignment.h \
     LiteralExpression.h \
     Expression.h \
-    BinaryExpression.h
+    BinaryExpression.h \
+    UnaryExpression.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
 
 
 

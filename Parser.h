@@ -28,6 +28,7 @@ private:
 	ASTNode* parseFunctionCall();
 	ASTNode* parseVariableAssignment();
 	Expression* parseTerm();
+	Expression* parseUnaryExpression();
 	Expression* parseMultiplicativeExpression();
 	Expression* parseAdditiveExpression();
 	Expression* parseExpression();

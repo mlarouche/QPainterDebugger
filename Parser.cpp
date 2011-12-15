@@ -5,6 +5,7 @@
 #include "Expression.h"
 #include "BinaryExpression.h"
 #include "LiteralExpression.h"
+#include "UnaryExpression.h"
 #include "FunctionCall.h"
 #include "Lexer.h"
 #include "IdentifierExpression.h"
@@ -221,18 +222,35 @@ Expression* Parser::parseTerm()
 	return 0;
 }
 
+Expression* Parser::parseUnaryExpression()
+{
+	// unaryExpression ::= '-'? term
+	qDebug("unaryExpression");
+	Lexer::Token lookAhead = lexer->lookAhead();
+	if(lookAhead == Lexer::MinusSign)
+	{
+		// Eat '-'
+		getNextToken();
+		return new UnaryExpression(UnaryExpression::Negative, parseTerm());
+	}
+	else
+	{
+		return parseTerm();
+	}
+}
+
 Expression* Parser::parseMultiplicativeExpression()
 {
-	// multiplicativeExpression ::= term (('*'|'/'|) term)*
+	// multiplicativeExpression ::= unaryExpression (('*'|'/'|) unaryExpression)*
 	qDebug("multiplicativeExpression");
-	Expression* left = parseTerm();
+	Expression* left = parseUnaryExpression();
 
 	Lexer::Token lookAhead = lexer->lookAhead();
 
 	if(lookAhead == Lexer::MulSign || lookAhead == Lexer::DivSign || lookAhead == Lexer::ModuloSign)
 	{
 		getNextToken();
-		Expression* right = parseTerm();
+		Expression* right = parseUnaryExpression();
 
 		Lexer::Token secondLookAhead = lexer->lookAhead();
 		if(secondLookAhead == Lexer::MulSign || secondLookAhead == Lexer::DivSign || secondLookAhead == Lexer::ModuloSign)
