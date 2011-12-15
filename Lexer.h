@@ -50,6 +50,7 @@ public:
 private:
 	Lexer::Token isKeyword(const QString& value) const;
 	void consumeChar();
+	void consumeWhitespace();
 
 private:
 	QString m_sourceText;

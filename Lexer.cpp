@@ -13,20 +13,11 @@ KeywordPair Keywords[] = {
 Lexer::Lexer(const QString &sourceText)
 	: m_sourceText(sourceText), m_charIndex(0), m_lastChar(' '), m_currentLine(0), m_currentColumn(0)
 {
+	consumeWhitespace();
 }
 
 Lexer::Token Lexer::getNextToken()
 {
-	while(m_lastChar.isSpace())
-	{
-		if(m_lastChar == '\n')
-		{
-			m_currentLine++;
-			m_currentColumn = 0;
-		}
-		consumeChar();
-	}
-
 	if(m_lastChar.isDigit())
 	{
 		QString numberLiteral;
@@ -56,6 +47,8 @@ Lexer::Token Lexer::getNextToken()
 			parsedToken = Lexer::IntegerLiteral;
 		}
 		m_lastValue = numberLiteral;
+
+		consumeWhitespace();
 		return parsedToken;
 	}
 	else if(m_lastChar == '"')
@@ -74,6 +67,7 @@ Lexer::Token Lexer::getNextToken()
 		consumeChar();
 
 		m_lastValue = stringLiteral;
+		consumeWhitespace();
 		return Lexer::StringLiteral;
 	}
 	else if(m_lastChar.isLetter())
@@ -89,6 +83,7 @@ Lexer::Token Lexer::getNextToken()
 			{
 				qDebug("KEYWORD");
 				consumeChar();
+				consumeWhitespace();
 				return keyword;
 			}
 
@@ -98,6 +93,8 @@ Lexer::Token Lexer::getNextToken()
 
 		qDebug("IDENTIFIER");
 		m_lastValue = identifier;
+
+		consumeWhitespace();
 		return Lexer::Identifier;
 	}
 	else
@@ -155,6 +152,7 @@ Lexer::Token Lexer::getNextToken()
 		}
 
 		consumeChar();
+		consumeWhitespace();
 		return token;
 	}
 }
@@ -194,6 +192,19 @@ void Lexer::consumeChar()
 	{
 		m_charIndex = -1;
 		m_lastChar = QChar();
+	}
+}
+
+void Lexer::consumeWhitespace()
+{
+	while(m_lastChar.isSpace())
+	{
+		if(m_lastChar == '\n')
+		{
+			m_currentLine++;
+			m_currentColumn = 0;
+		}
+		consumeChar();
 	}
 }
 
