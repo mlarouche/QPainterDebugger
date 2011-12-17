@@ -118,17 +118,22 @@ ASTNode* Parser::parseStatement()
 	}
 }
 
-ASTNode* Parser::parseFunctionCall()
+Expression* Parser::parseFunctionCall(bool fromTerm)
 {
 	// functionCall ::= IDENTIFIER '(' expression? (',' expression)* ')'
 	qDebug("functionCall");
-	getNextToken();
 
-	if(m_token != Lexer::Identifier)
+	// When we come from "term", IDENTIFIER is already parsed
+	if(!fromTerm)
 	{
-		m_errorMessage = "Function name expected";
-		// TODO: Error
-		return 0;
+		getNextToken();
+
+		if(m_token != Lexer::Identifier)
+		{
+			m_errorMessage = "Function name expected";
+			// TODO: Error
+			return 0;
+		}
 	}
 
 	QString functionName = lexer->lastReadValue().toString();
@@ -196,7 +201,7 @@ ASTNode* Parser::parseVariableAssignment()
 
 Expression* Parser::parseTerm()
 {
-	// term ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | IDENTIFIER | '(' expression ')'
+	// term ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | IDENTIFIER | '(' expression ')' | functionCall
 
 	qDebug("term");
 	getNextToken();
@@ -210,7 +215,16 @@ Expression* Parser::parseTerm()
 		case Lexer::FloatLiteral:
 			return new LiteralExpression(lexer->lastReadValue().toDouble());
 		case Lexer::Identifier:
-			return new IdentifierExpression(lexer->lastReadValue().toString(), m_context);
+		{
+			if(lexer->lookAhead() == Lexer::LeftParenthesis)
+			{
+				return parseFunctionCall(true);
+			}
+			else
+			{
+				return new IdentifierExpression(lexer->lastReadValue().toString(), m_context);
+			}
+		}
 		case Lexer::LeftParenthesis:
 		{
 			Expression *parenthesisExpression = parseExpression();

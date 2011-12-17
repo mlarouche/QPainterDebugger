@@ -25,7 +25,7 @@ public:
 
 private:
 	ASTNode* parseStatement();
-	ASTNode* parseFunctionCall();
+	Expression* parseFunctionCall(bool fromTerm = false);
 	ASTNode* parseVariableAssignment();
 	Expression* parseTerm();
 	Expression* parseUnaryExpression();

@@ -1,13 +1,11 @@
 #ifndef FUNCTIONCALL
 #define FUNCTIONCALL
 
-#include "ASTNode.h"
+#include "Expression.h"
 
 #include <QtCore/QList>
 
-class Expression;
-
-class FunctionCall : public ASTNode
+class FunctionCall : public Expression
 {
 public:
 	FunctionCall(const QString &functionName, PainterContext* context);
