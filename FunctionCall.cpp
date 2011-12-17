@@ -20,14 +20,16 @@ void FunctionCall::addParameter(Expression* expression)
 
 QVariant FunctionCall::evaluate()
 {
+	QVariant returnValue;
+
 	if(context()->isValidFunction(m_functionName))
 	{
-		context()->function(m_functionName)->execute(context()->painter(), m_parameters);
+		returnValue = context()->function(m_functionName)->execute(context()->painter(), m_parameters);
 	}
 	else
 	{
 		showErrorMessage(QString("%1 is not a valid function name").arg(m_functionName));
 	}
 
-	return QVariant();
+	return returnValue;
 }

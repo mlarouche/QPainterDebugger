@@ -144,18 +144,25 @@ ASTNode* Parser::parseFunctionCall()
 	//Ignore (
 	getNextToken();
 
-	// Parse expression untill we find the right parenthesis
-	while(m_token != Lexer::RightParenthesis)
+	if(lexer->lookAhead() == Lexer::RightParenthesis)
 	{
-		Expression *parameter = parseExpression();
-		if(!parameter)
-		{
-			delete functionCall;
-			return 0;
-		}
-
-		functionCall->addParameter(parameter);
 		getNextToken();
+	}
+	else
+	{
+		// Parse expression untill we find the right parenthesis
+		while(m_token != Lexer::RightParenthesis)
+		{
+			Expression *parameter = parseExpression();
+			if(!parameter)
+			{
+				delete functionCall;
+				return 0;
+			}
+
+			functionCall->addParameter(parameter);
+			getNextToken();
+		}
 	}
 
 	return functionCall;

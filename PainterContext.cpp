@@ -46,21 +46,30 @@ void PainterContext::setFunction(const QString &functionName, PainterCommand* fu
 
 void PainterContext::bindFunctions()
 {
-	BIND_PAINTER_FUNCTION_6(drawArc,int,int,int,int,int,int);
-	BIND_PAINTER_FUNCTION_6(drawChord,int,int,int,int,int,int);
-	BIND_PAINTER_FUNCTION_4(drawEllipse,int,int,int,int);
-	BIND_PAINTER_FUNCTION_4(drawLine, int,int,int,int);
-	BIND_PAINTER_FUNCTION_6(drawPie, int,int,int,int,int,int);
-	BIND_PAINTER_FUNCTION_2(drawPoint,int,int);
-	BIND_PAINTER_FUNCTION_4(drawRect,int,int,int,int);
-	BIND_PAINTER_FUNCTION_3(drawText,int,int,QString);
-	BIND_PAINTER_FUNCTION_4(eraseRect,int,int,int,int);
-	BIND_PAINTER_FUNCTION_0(resetTransform);
-	BIND_PAINTER_FUNCTION_0(restore);
-	BIND_PAINTER_FUNCTION_1(rotate,qreal);
-	BIND_PAINTER_FUNCTION_0(save);
-	BIND_PAINTER_FUNCTION_2(scale,qreal,qreal);
-	BIND_PAINTER_FUNCTION_1(setOpacity,qreal);
-	BIND_PAINTER_FUNCTION_2(shear, qreal,qreal);
-	BIND_PAINTER_FUNCTION_2(translate,qreal,qreal);
+	BIND_PAINTER_PROCEDURE_6(drawArc,int,int,int,int,int,int);
+	BIND_PAINTER_PROCEDURE_6(drawChord,int,int,int,int,int,int);
+	BIND_PAINTER_PROCEDURE_4(drawEllipse,int,int,int,int);
+	BIND_PAINTER_PROCEDURE_4(drawLine, int,int,int,int);
+	BIND_PAINTER_PROCEDURE_6(drawPie, int,int,int,int,int,int);
+	BIND_PAINTER_PROCEDURE_2(drawPoint,int,int);
+	BIND_PAINTER_PROCEDURE_4(drawRect,int,int,int,int);
+	BIND_PAINTER_PROCEDURE_3(drawText,int,int,QString);
+	BIND_PAINTER_PROCEDURE_4(eraseRect,int,int,int,int);
+	BIND_PAINTER_PROCEDURE_0(resetTransform);
+	BIND_PAINTER_PROCEDURE_0(restore);
+	BIND_PAINTER_PROCEDURE_1(rotate,qreal);
+	BIND_PAINTER_PROCEDURE_0(save);
+	BIND_PAINTER_PROCEDURE_2(scale,qreal,qreal);
+	BIND_PAINTER_PROCEDURE_2(setBrushOrigin,int,int);
+	BIND_PAINTER_PROCEDURE_1(setClipping,bool);
+	BIND_PAINTER_PROCEDURE_1(setOpacity,qreal);
+	BIND_PAINTER_PROCEDURE_1(setViewTransformEnabled,bool);
+	BIND_PAINTER_PROCEDURE_2(shear, qreal,qreal);
+	BIND_PAINTER_PROCEDURE_2(translate,qreal,qreal);
+
+	BIND_PAINTER_FUNCTION_0(bool, hasClipping);
+	BIND_PAINTER_FUNCTION_0(bool, isActive);
+	BIND_PAINTER_FUNCTION_0(qreal, opacity);
+	BIND_PAINTER_FUNCTION_0(bool, viewTransformEnabled);
+	BIND_PAINTER_FUNCTION_0(bool,worldMatrixEnabled);
 }
