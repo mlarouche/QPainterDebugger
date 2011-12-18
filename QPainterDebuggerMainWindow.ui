@@ -37,7 +37,14 @@
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QTextEdit" name="textEditCode"/>
+      <widget class="QTextEdit" name="textEditCode">
+       <property name="font">
+        <font>
+         <family>Monaco</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+      </widget>
      </widget>
     </item>
     <item>

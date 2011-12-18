@@ -6,6 +6,7 @@
 #include <QtGui/QPainter>
 
 // Local includess
+#include "DSLHighlighter.h"
 #include "Lexer.h"
 #include "Parser.h"
 #include "PainterContext.h"
@@ -16,11 +17,14 @@ QPainterDebuggerMainWindow::QPainterDebuggerMainWindow(QWidget *parent)
 	ui->setupUi(this);
 
 	connectSlots();
+
+	m_highlighter = new DSLHighlighter(ui->textEditCode->document());
 }
 
 QPainterDebuggerMainWindow::~QPainterDebuggerMainWindow()
 {
 	delete ui;
+	delete m_highlighter;
 }
 
 void QPainterDebuggerMainWindow::connectSlots()
