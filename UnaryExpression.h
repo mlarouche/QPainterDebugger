@@ -15,6 +15,8 @@ public:
 	UnaryExpression(UnaryExpressionType type, Expression* expression);
 	~UnaryExpression();
 
+	QVariant::Type type() const;
+
 	QVariant evaluate();
 
 private:

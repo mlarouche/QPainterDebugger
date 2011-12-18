@@ -10,6 +10,11 @@ UnaryExpression::~UnaryExpression()
 	delete m_expression;
 }
 
+QVariant::Type UnaryExpression::type() const
+{
+	return m_expression->type();
+}
+
 QVariant UnaryExpression::evaluate()
 {
 	QVariant value = m_expression->evaluate();

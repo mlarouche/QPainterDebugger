@@ -15,6 +15,7 @@ public:
 		StringLiteral,
 		IntegerLiteral,
 		FloatLiteral,
+		BoolLiteral,
 		LeftParenthesis,
 		RightParenthesis,
 		Comma,
@@ -25,7 +26,9 @@ public:
 		DivSign,
 		ModuloSign,
 		// Keywords
-		Keyword_var
+		Keyword_var,
+		Keyword_true,
+		Keyword_false
 	};
 
 public:

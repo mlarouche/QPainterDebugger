@@ -201,7 +201,13 @@ ASTNode* Parser::parseVariableAssignment()
 
 Expression* Parser::parseTerm()
 {
-	// term ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | IDENTIFIER | '(' expression ')' | functionCall
+	// term ::= INTEGER_LITERAL
+	//		| FLOAT_LITERAL
+	//		| STRING_LITERAL
+	//		| BOOL_LITERAL
+	//		| IDENTIFIER
+	//		| '(' expression ')'
+	//		| functionCall
 
 	qDebug("term");
 	getNextToken();
@@ -214,6 +220,8 @@ Expression* Parser::parseTerm()
 			return new LiteralExpression(lexer->lastReadValue().toString());
 		case Lexer::FloatLiteral:
 			return new LiteralExpression(lexer->lastReadValue().toDouble());
+		case Lexer::BoolLiteral:
+			return new LiteralExpression(lexer->lastReadValue().toBool());
 		case Lexer::Identifier:
 		{
 			if(lexer->lookAhead() == Lexer::LeftParenthesis)

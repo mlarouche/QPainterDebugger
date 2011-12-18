@@ -11,7 +11,9 @@ public:
 	FunctionCall(const QString &functionName, PainterContext* context);
 	virtual ~FunctionCall();
 
-	virtual QVariant evaluate();
+	QVariant::Type type() const;
+
+	QVariant evaluate();
 
 	void addParameter(Expression* expression);
 

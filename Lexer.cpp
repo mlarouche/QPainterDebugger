@@ -7,7 +7,9 @@ struct KeywordPair
 };
 
 KeywordPair Keywords[] = {
-	{"var", Lexer::Keyword_var}
+	{"var", Lexer::Keyword_var},
+	{"true", Lexer::Keyword_true},
+	{"false", Lexer::Keyword_false}
 };
 
 Lexer::Lexer(const QString &sourceText)
@@ -81,9 +83,17 @@ Lexer::Token Lexer::getNextToken()
 			Lexer::Token keyword = isKeyword(identifier);
 			if(keyword != Lexer::Invalid)
 			{
-				qDebug("KEYWORD");
 				consumeChar();
 				consumeWhitespace();
+
+				if(keyword == Keyword_true || keyword == Keyword_false)
+				{
+					qDebug("BOOL_LITERAL");
+					m_lastValue = (keyword == Keyword_true ? true : false);
+					return BoolLiteral;
+				}
+
+				qDebug("KEYWORD");
 				return keyword;
 			}
 

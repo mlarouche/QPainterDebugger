@@ -18,6 +18,7 @@ public:
 
 	BinaryExpression(BinaryExpressionType type, Expression* left, Expression* right);
 
+	QVariant::Type type() const;
 	QVariant evaluate();
 
 private:

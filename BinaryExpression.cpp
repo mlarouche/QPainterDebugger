@@ -5,6 +5,11 @@ BinaryExpression::BinaryExpression(BinaryExpressionType type, Expression* left, 
 {
 }
 
+QVariant::Type BinaryExpression::type() const
+{
+	return m_left->type();
+}
+
 QVariant BinaryExpression::evaluate()
 {
 	QVariant leftValue = m_left->evaluate();

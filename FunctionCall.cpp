@@ -1,7 +1,9 @@
 #include "FunctionCall.h"
 
+// Local includes
 #include "Expression.h"
 #include "PainterCommand.h"
+#include "NameMangling.h"
 
 FunctionCall::FunctionCall(const QString &functionName, PainterContext* context)
 : Expression(context), m_functionName(functionName)
@@ -11,6 +13,11 @@ FunctionCall::FunctionCall(const QString &functionName, PainterContext* context)
 FunctionCall::~FunctionCall()
 {
 	qDeleteAll(m_parameters);
+}
+
+QVariant::Type FunctionCall::type() const
+{
+	return QVariant::UserType;
 }
 
 void FunctionCall::addParameter(Expression* expression)

@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     LiteralExpression.cpp \
     Expression.cpp \
     BinaryExpression.cpp \
-    UnaryExpression.cpp
+    UnaryExpression.cpp \
+    NameMangling.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
@@ -39,9 +40,12 @@ HEADERS  += QPainterDebuggerMainWindow.h \
     LiteralExpression.h \
     Expression.h \
     BinaryExpression.h \
-    UnaryExpression.h
+    UnaryExpression.h \
+    NameMangling.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
 
 
 
