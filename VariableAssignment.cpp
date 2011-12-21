@@ -2,7 +2,7 @@
 
 #include "Expression.h"
 
-VariableAssignment::VariableAssignment(const QString& variableName, Expression* expression, PainterContext* context)
+VariableAssignment::VariableAssignment(const QString& variableName, Expression* expression, Scope* context)
 : ASTNode(context), m_variableName(variableName), m_expression(expression)
 {
 }

@@ -6,27 +6,13 @@
 
 PainterContext::PainterContext()
 {
+	bindEnums();
 	bindFunctions();
 }
 
 PainterContext::~PainterContext()
 {
 	qDeleteAll(m_functions);
-}
-
-bool PainterContext::hasVariable(const QString &variableName)
-{
-	return m_variables.contains(variableName);
-}
-
-QVariant PainterContext::variable(const QString &identifier)
-{
-	return m_variables.value(identifier);
-}
-
-void PainterContext::setVariable(const QString &identifier, const QVariant &value)
-{
-	m_variables.insert(identifier,value);
 }
 
 bool PainterContext::isValidFunction(const QString &functionName) const
@@ -42,6 +28,32 @@ PainterCommand* PainterContext::function(const QString &functionName) const
 void PainterContext::setFunction(const QString &functionName, PainterCommand* function)
 {
 	m_functions.insert(functionName, function);
+}
+
+void PainterContext::bindEnums()
+{
+	BEGIN_BIND_ENUM(GlobalColor)
+		ENUM_NAME_VALUE(white, Qt::white);
+		ENUM_NAME_VALUE(black, Qt::black);
+		ENUM_NAME_VALUE(red, Qt::red);
+		ENUM_NAME_VALUE(darkRed, Qt::darkRed);
+		ENUM_NAME_VALUE(green, Qt::green);
+		ENUM_NAME_VALUE(darkGreen, Qt::darkGreen);
+		ENUM_NAME_VALUE(blue, Qt::blue);
+		ENUM_NAME_VALUE(darkBlue, Qt::darkBlue);
+		ENUM_NAME_VALUE(cyan, Qt::cyan);
+		ENUM_NAME_VALUE(darkCyan, Qt::darkCyan);
+		ENUM_NAME_VALUE(magenta, Qt::magenta);
+		ENUM_NAME_VALUE(darkMagenta, Qt::darkMagenta);
+		ENUM_NAME_VALUE(yellow, Qt::yellow);
+		ENUM_NAME_VALUE(darkYellow, Qt::darkYellow);
+		ENUM_NAME_VALUE(gray, Qt::gray);
+		ENUM_NAME_VALUE(darkGray, Qt::darkGray);
+		ENUM_NAME_VALUE(lightGray, Qt::lightGray);
+		ENUM_NAME_VALUE(transparent, Qt::transparent);
+		ENUM_NAME_VALUE(color0, Qt::color0);
+		ENUM_NAME_VALUE(color1, Qt::color1);
+	END_BIND_ENUM(GlobalColor)
 }
 
 void PainterContext::bindFunctions()
@@ -66,6 +78,7 @@ void PainterContext::bindFunctions()
 	BIND_PAINTER_PROCEDURE_1(setViewTransformEnabled,bool);
 	BIND_PAINTER_PROCEDURE_2(shear, qreal,qreal);
 	BIND_PAINTER_PROCEDURE_2(translate,qreal,qreal);
+	BIND_PAINTER_PROCEDURE_1(setPen, QColor);
 
 	BIND_PAINTER_FUNCTION_0(bool, hasClipping);
 	BIND_PAINTER_FUNCTION_0(bool, isActive);

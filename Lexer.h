@@ -25,6 +25,7 @@ public:
 		MulSign,
 		DivSign,
 		ModuloSign,
+		ScopeOperator,
 		// Keywords
 		Keyword_var,
 		Keyword_true,

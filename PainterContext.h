@@ -1,13 +1,12 @@
 #ifndef PAINTERCONTEXT_H
 #define PAINTERCONTEXT_H
 
-#include <QtCore/QHash>
-#include <QtCore/QVariant>
+#include "Scope.h"
 
 class QPainter;
 class PainterCommand;
 
-class PainterContext
+class PainterContext : public Scope
 {
 public:
 	PainterContext();
@@ -23,20 +22,16 @@ public:
 		m_painter = painter;
 	}
 
-	bool hasVariable(const QString &variableName);
-	QVariant variable(const QString &identifier);
-	void setVariable(const QString &identifier, const QVariant &value);
-
 	bool isValidFunction(const QString &functionName) const;
 	PainterCommand* function(const QString &functionName) const;
 	void setFunction(const QString &functionName, PainterCommand* function);
 
 private:
+	void bindEnums();
 	void bindFunctions();
 
 private:
 	QPainter* m_painter;
-	QHash<QString,QVariant> m_variables;
 	QHash<QString,PainterCommand*> m_functions;
 };
 
@@ -269,5 +264,18 @@ private:
 		} \
 	}; \
 	setFunction(#functionName, new __##returnType##_##functionName##_##type1##_##type2##_##type3##_##type4##_##type5##_##type6##_##type7##_##type8##_##type9##_PainterCommand)
+
+#define BEGIN_BIND_ENUM(enumName) \
+	class __Enum_##enumName##__ : public Scope \
+	{ \
+	public: \
+		__Enum_##enumName##__() { \
+
+#define END_BIND_ENUM(enumName) \
+		} \
+	}; \
+	addScope(#enumName, new __Enum_##enumName##__); \
+
+#define ENUM_NAME_VALUE(friendlyName, value) setVariable(#friendlyName,value)
 
 #endif

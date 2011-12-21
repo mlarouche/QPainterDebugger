@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     BinaryExpression.cpp \
     UnaryExpression.cpp \
     NameMangling.cpp \
-    DSLHighlighter.cpp
+    DSLHighlighter.cpp \
+    Scope.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
@@ -43,9 +44,12 @@ HEADERS  += QPainterDebuggerMainWindow.h \
     BinaryExpression.h \
     UnaryExpression.h \
     NameMangling.h \
-    DSLHighlighter.h
+    DSLHighlighter.h \
+    Scope.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
 
 
 

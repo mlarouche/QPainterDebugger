@@ -1,6 +1,6 @@
 #include "IdentifierExpression.h"
 
-IdentifierExpression::IdentifierExpression(const QString &identifier, PainterContext* context)
+IdentifierExpression::IdentifierExpression(const QString &identifier, Scope* context)
 : Expression(context), m_identifier(identifier)
 {
 }

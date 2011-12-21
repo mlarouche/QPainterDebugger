@@ -11,6 +11,7 @@
 #include "IdentifierExpression.h"
 #include "RootNode.h"
 #include "VariableAssignment.h"
+#include "PainterContext.h"
 
 BinaryExpression::BinaryExpressionType tokenToBinaryExpressionType(Lexer::Token token)
 {
@@ -123,7 +124,7 @@ Expression* Parser::parseFunctionCall(bool fromTerm)
 	// functionCall ::= IDENTIFIER '(' expression? (',' expression)* ')'
 	qDebug("functionCall");
 
-	// When we come from "term", IDENTIFIER is already parsed
+	// When we come from "term", IDENTIFIER is already parsed.
 	if(!fromTerm)
 	{
 		getNextToken();
@@ -199,13 +200,38 @@ ASTNode* Parser::parseVariableAssignment()
 	return new VariableAssignment(variableName, expression, m_context);
 }
 
+Scope *Parser::parseQualifiedIdentifier(bool firstIdentifierIsParsed)
+{
+	// qualifiedIdentifier ::= IDENTIFIER ('.' IDENTIFIER)*
+	if(!firstIdentifierIsParsed)
+	{
+		getNextToken();
+	}
+
+	Scope* scope = m_context;
+	while(lexer->lookAhead() == Lexer::ScopeOperator)
+	{
+		QString scopeName = lexer->lastReadValue().toString();
+		// Eat scope operator
+		getNextToken();
+
+		// Get to next scope
+		scope = scope->scope(scopeName);
+
+		// Read next identifier
+		getNextToken();
+	}
+
+	return scope;
+}
+
 Expression* Parser::parseTerm()
 {
 	// term ::= INTEGER_LITERAL
 	//		| FLOAT_LITERAL
 	//		| STRING_LITERAL
 	//		| BOOL_LITERAL
-	//		| IDENTIFIER
+	//		| qualifiedIdentifier
 	//		| '(' expression ')'
 	//		| functionCall
 
@@ -224,13 +250,16 @@ Expression* Parser::parseTerm()
 			return new LiteralExpression(lexer->lastReadValue().toBool());
 		case Lexer::Identifier:
 		{
-			if(lexer->lookAhead() == Lexer::LeftParenthesis)
+			Lexer::Token lookAhead = lexer->lookAhead();
+
+			if(lookAhead == Lexer::LeftParenthesis)
 			{
 				return parseFunctionCall(true);
 			}
 			else
 			{
-				return new IdentifierExpression(lexer->lastReadValue().toString(), m_context);
+				Scope* scopeToUse = parseQualifiedIdentifier(true);
+				return new IdentifierExpression(lexer->lastReadValue().toString(), scopeToUse);
 			}
 		}
 		case Lexer::LeftParenthesis:

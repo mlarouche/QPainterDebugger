@@ -3,6 +3,7 @@
 // Local includes
 #include "Expression.h"
 #include "PainterCommand.h"
+#include "PainterContext.h"
 #include "NameMangling.h"
 
 FunctionCall::FunctionCall(const QString &functionName, PainterContext* context)
@@ -29,9 +30,10 @@ QVariant FunctionCall::evaluate()
 {
 	QVariant returnValue;
 
-	if(context()->isValidFunction(m_functionName))
+	PainterContext* painterContext = static_cast<PainterContext*>(context());
+	if(painterContext->isValidFunction(m_functionName))
 	{
-		returnValue = context()->function(m_functionName)->execute(context()->painter(), m_parameters);
+		returnValue = painterContext->function(m_functionName)->execute(painterContext->painter(), m_parameters);
 	}
 	else
 	{

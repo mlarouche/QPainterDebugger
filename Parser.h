@@ -8,6 +8,7 @@
 
 class Expression;
 class PainterContext;
+class Scope;
 
 class Parser
 {
@@ -32,6 +33,7 @@ private:
 	Expression* parseMultiplicativeExpression();
 	Expression* parseAdditiveExpression();
 	Expression* parseExpression();
+	Scope *parseQualifiedIdentifier(bool firstIdentifierIsParsed = false);
 
 private:
 	void getNextToken();

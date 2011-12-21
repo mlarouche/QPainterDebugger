@@ -8,7 +8,7 @@ class Expression;
 class VariableAssignment : public ASTNode
 {
 public:
-	VariableAssignment(const QString& variableName, Expression* expression, PainterContext* context);
+	VariableAssignment(const QString& variableName, Expression* expression, Scope* context);
 	virtual ~VariableAssignment();
 
 	virtual QVariant evaluate();

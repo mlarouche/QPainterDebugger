@@ -5,6 +5,8 @@
 
 #include <QtCore/QList>
 
+class PainterContext;
+
 class FunctionCall : public Expression
 {
 public:

@@ -7,7 +7,7 @@ class Expression : public ASTNode
 {
 public:
 	Expression();
-	Expression(PainterContext* context);
+	Expression(Scope* context);
 
 	virtual QVariant::Type type() const = 0;
 };

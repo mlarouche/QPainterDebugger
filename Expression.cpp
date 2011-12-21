@@ -5,7 +5,7 @@ Expression::Expression()
 {
 }
 
-Expression::Expression(PainterContext* context)
+Expression::Expression(Scope* context)
 : ASTNode(context)
 {
 }

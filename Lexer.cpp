@@ -155,6 +155,10 @@ Lexer::Token Lexer::getNextToken()
 				qDebug("MODULO_SIGN");
 				token = Lexer::ModuloSign;
 				break;
+			case '.':
+				qDebug("SCOPE_OPERATOR");
+				token = Lexer::ScopeOperator;
+				break;
 			default:
 				qDebug("Invalid token found !");
 				token = Lexer::Invalid;

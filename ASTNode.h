@@ -3,7 +3,7 @@
 
 #include <QtCore/QVariant>
 
-#include "PainterContext.h"
+#include "Scope.h"
 
 class ASTNode
 {
@@ -11,12 +11,12 @@ public:
 	ASTNode();
 	virtual ~ASTNode();
 
-	ASTNode(PainterContext* context)
+	ASTNode(Scope* context)
 	{
 		setContext(context);
 	}
 
-	void setContext(PainterContext* context)
+	void setContext(Scope* context)
 	{
 		m_context = context;
 	}
@@ -24,7 +24,7 @@ public:
 	virtual QVariant evaluate() = 0;
 
 protected:
-	PainterContext* context() const
+	Scope* context() const
 	{
 		return m_context;
 	}
@@ -32,7 +32,7 @@ protected:
 	void showErrorMessage(const QString& message);
 
 private:
-	PainterContext* m_context;
+	Scope* m_context;
 	QString m_errorMessage;
 };
 
