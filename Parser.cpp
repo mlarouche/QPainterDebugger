@@ -13,6 +13,7 @@
 #include "RootNode.h"
 #include "UnaryExpression.h"
 #include "VariableAssignment.h"
+#include "VariableCreation.h"
 
 BinaryExpression::BinaryExpressionType tokenToBinaryExpressionType(Lexer::Token token)
 {
@@ -103,7 +104,7 @@ ASTNode* Parser::parse(const QString& sourceText)
 
 ASTNode* Parser::parseStatement()
 {
-	// statement ::= functionCall | variableAssignment
+	// statement ::= functionCall | variableAssignment | variableCreation
 	qDebug("statement");
 
 	Lexer::Token lookAhead = lexer->lookAhead();
@@ -111,9 +112,20 @@ ASTNode* Parser::parseStatement()
 	switch(lookAhead)
 	{
 		case Lexer::Identifier:
-			return parseFunctionCall(parseQualifiedIdentifier());
+		{
+			QString qualifiedIdentifier = parseQualifiedIdentifier();
+			Lexer::Token identLookAhead = lexer->lookAhead();
+			if(identLookAhead == Lexer::LeftParenthesis)
+			{
+				return parseFunctionCall(qualifiedIdentifier);
+			}
+			else if(identLookAhead == Lexer::EqualSign)
+			{
+				return parseVariableAssignment(qualifiedIdentifier);
+			}
+		}
 		case Lexer::Keyword_var:
-			return parseVariableAssignment();
+			return parseVariableCreation();
 		default:
 			m_errorMessage = "You can only use statements here.";
 			return 0;
@@ -167,10 +179,10 @@ Expression* Parser::parseFunctionCall(const QString &qualifiedIdentifier)
 	return functionCall;
 }
 
-ASTNode* Parser::parseVariableAssignment()
+ASTNode* Parser::parseVariableCreation()
 {
-	qDebug("variableAssignment");
-	// variableAssignment ::= 'var' IDENTIFIER '=' expression
+	qDebug("variableCreation");
+	// variableCreation ::= 'var' IDENTIFIER '=' expression
 
 	// Eat 'var' token
 	getNextToken();
@@ -190,7 +202,26 @@ ASTNode* Parser::parseVariableAssignment()
 		return 0;
 	}
 
-	return new VariableAssignment(variableName, expression, m_context);
+	return new VariableCreation(variableName, expression, m_context);
+}
+
+ASTNode* Parser::parseVariableAssignment(const QString &qualifiedIdentifier)
+{
+	qDebug("variableAssignment");
+	// variableAssignment ::= qualifiedIdentifier '=' expression
+
+	// Eat '='
+	getNextToken();
+
+	// Parse expression
+	Expression* expression = parseExpression();
+	if(!expression)
+	{
+		m_errorMessage = "You can only assign an expression to a variable";
+		return 0;
+	}
+
+	return new VariableAssignment(qualifiedIdentifier, expression, m_context);
 }
 
 QString Parser::parseQualifiedIdentifier(bool firstIdentifierIsParsed)

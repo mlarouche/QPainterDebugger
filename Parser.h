@@ -27,7 +27,8 @@ public:
 private:
 	ASTNode* parseStatement();
 	Expression* parseFunctionCall(const QString &qualifiedIdentifier = QString());
-	ASTNode* parseVariableAssignment();
+	ASTNode* parseVariableCreation();
+	ASTNode* parseVariableAssignment(const QString &qualifiedIdentifier);
 	Expression* parseTerm();
 	Expression* parseUnaryExpression();
 	Expression* parseMultiplicativeExpression();

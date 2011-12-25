@@ -14,15 +14,31 @@ VariableAssignment::~VariableAssignment()
 
 QVariant VariableAssignment::evaluate()
 {
+	Scope* scopeToUse = 0;
+	QString variableName = context()->findIdentifierAndScope(m_variableName,scopeToUse);
+
 	QVariant expressionValue = m_expression->evaluate();
 	if(expressionValue.canConvert<ClassInstance>())
 	{
+		if(!scopeToUse->hasScope(variableName))
+		{
+			showErrorMessage(QString("Scope %1 does not exists for assignment").arg(variableName));
+			return QVariant();
+		}
+
 		ClassInstance instance = expressionValue.value<ClassInstance>();
-		context()->addScope(m_variableName, instance.classInstance);
+		scopeToUse->addScope(variableName, instance.classInstance);
 	}
 	else
 	{
-		context()->setVariable(m_variableName, m_expression->evaluate());
+		if(!scopeToUse->hasVariable(variableName))
+		{
+			showErrorMessage(QString("Variable %1 is not definied in assignment context").arg(variableName));
+			return QVariant();
+		}
+
+		scopeToUse->setVariable(variableName, m_expression->evaluate());
 	}
+
 	return QVariant();
 }

@@ -154,9 +154,9 @@ PainterClassPrototype::PainterClassPrototype()
 
 	BIND_PAINTER_PROCEDURE_5(fillRect,int,int,int,int,QColor);
 
-	BIND_PAINTER_FUNCTION_0(bool, hasClipping);
-	BIND_PAINTER_FUNCTION_0(bool, isActive);
-	BIND_PAINTER_FUNCTION_0(qreal, opacity);
-	BIND_PAINTER_FUNCTION_0(bool, viewTransformEnabled);
+	BIND_PAINTER_FUNCTION_0(bool,hasClipping);
+	BIND_PAINTER_FUNCTION_0(bool,isActive);
+	BIND_PAINTER_FUNCTION_0(qreal,opacity);
+	BIND_PAINTER_FUNCTION_0(bool,viewTransformEnabled);
 	BIND_PAINTER_FUNCTION_0(bool,worldMatrixEnabled);
 }

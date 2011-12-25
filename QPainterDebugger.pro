@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     NameMangling.cpp \
     DSLHighlighter.cpp \
     Scope.cpp \
-    ConstructorCall.cpp
+    ConstructorCall.cpp \
+    VariableCreation.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
@@ -50,9 +51,12 @@ HEADERS  += QPainterDebuggerMainWindow.h \
     ClassPrototype.h \
     ConstructorCall.h \
     ClassConstructor.h \
-    BindingMacros.h
+    BindingMacros.h \
+    VariableCreation.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
 
 
 
