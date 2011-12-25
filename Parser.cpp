@@ -2,16 +2,17 @@
 
 // Local includes
 #include "ASTNode.h"
-#include "Expression.h"
 #include "BinaryExpression.h"
-#include "LiteralExpression.h"
-#include "UnaryExpression.h"
+#include "ConstructorCall.h"
+#include "Expression.h"
 #include "FunctionCall.h"
-#include "Lexer.h"
 #include "IdentifierExpression.h"
-#include "RootNode.h"
-#include "VariableAssignment.h"
+#include "Lexer.h"
+#include "LiteralExpression.h"
 #include "PainterContext.h"
+#include "RootNode.h"
+#include "UnaryExpression.h"
+#include "VariableAssignment.h"
 
 BinaryExpression::BinaryExpressionType tokenToBinaryExpressionType(Lexer::Token token)
 {
@@ -110,7 +111,7 @@ ASTNode* Parser::parseStatement()
 	switch(lookAhead)
 	{
 		case Lexer::Identifier:
-			return parseFunctionCall();
+			return parseFunctionCall(parseQualifiedIdentifier());
 		case Lexer::Keyword_var:
 			return parseVariableAssignment();
 		default:
@@ -119,33 +120,25 @@ ASTNode* Parser::parseStatement()
 	}
 }
 
-Expression* Parser::parseFunctionCall(bool fromTerm)
+Expression* Parser::parseFunctionCall(const QString &qualifiedIdentifier)
 {
-	// functionCall ::= IDENTIFIER '(' expression? (',' expression)* ')'
+	// functionCall ::= qualifiedIdentifier '(' expression? (',' expression)* ')'
 	qDebug("functionCall");
 
-	// When we come from "term", IDENTIFIER is already parsed.
-	if(!fromTerm)
+	QString functionName = qualifiedIdentifier;
+	QString lastIdentifier = qualifiedIdentifier.mid(qualifiedIdentifier.lastIndexOf('.'));
+
+	FunctionCall* functionCall = 0;
+
+	// A function call can be a constructor call
+	if(m_context->hasClassPrototype(lastIdentifier))
 	{
-		getNextToken();
-
-		if(m_token != Lexer::Identifier)
-		{
-			m_errorMessage = "Function name expected";
-			// TODO: Error
-			return 0;
-		}
+		functionCall = new ConstructorCall(functionName, m_context);
 	}
-
-	QString functionName = lexer->lastReadValue().toString();
-
-	if(!m_context->isValidFunction(functionName))
+	else
 	{
-		m_errorMessage = QString("%1 is not defined").arg(functionName);
-		return 0;
+		functionCall = new FunctionCall(functionName, m_context);
 	}
-
-	FunctionCall* functionCall = new FunctionCall(functionName, m_context);
 
 	//Ignore (
 	getNextToken();
@@ -200,7 +193,7 @@ ASTNode* Parser::parseVariableAssignment()
 	return new VariableAssignment(variableName, expression, m_context);
 }
 
-Scope *Parser::parseQualifiedIdentifier(bool firstIdentifierIsParsed)
+QString Parser::parseQualifiedIdentifier(bool firstIdentifierIsParsed)
 {
 	// qualifiedIdentifier ::= IDENTIFIER ('.' IDENTIFIER)*
 	if(!firstIdentifierIsParsed)
@@ -208,21 +201,25 @@ Scope *Parser::parseQualifiedIdentifier(bool firstIdentifierIsParsed)
 		getNextToken();
 	}
 
-	Scope* scope = m_context;
+	QString qualifiedIdentifier;
+
 	while(lexer->lookAhead() == Lexer::ScopeOperator)
 	{
 		QString scopeName = lexer->lastReadValue().toString();
+
+		qualifiedIdentifier += scopeName;
+		qualifiedIdentifier += '.';
+
 		// Eat scope operator
 		getNextToken();
-
-		// Get to next scope
-		scope = scope->scope(scopeName);
 
 		// Read next identifier
 		getNextToken();
 	}
 
-	return scope;
+	qualifiedIdentifier += lexer->lastReadValue().toString();
+
+	return qualifiedIdentifier;
 }
 
 Expression* Parser::parseTerm()
@@ -250,16 +247,14 @@ Expression* Parser::parseTerm()
 			return new LiteralExpression(lexer->lastReadValue().toBool());
 		case Lexer::Identifier:
 		{
-			Lexer::Token lookAhead = lexer->lookAhead();
-
-			if(lookAhead == Lexer::LeftParenthesis)
+			QString qualifiedIdentifier = parseQualifiedIdentifier(true);
+			if(lexer->lookAhead() == Lexer::LeftParenthesis)
 			{
-				return parseFunctionCall(true);
+				return parseFunctionCall(qualifiedIdentifier);
 			}
 			else
 			{
-				Scope* scopeToUse = parseQualifiedIdentifier(true);
-				return new IdentifierExpression(lexer->lastReadValue().toString(), scopeToUse);
+				return new IdentifierExpression(qualifiedIdentifier, m_context);
 			}
 		}
 		case Lexer::LeftParenthesis:

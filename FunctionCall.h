@@ -10,16 +10,16 @@ class PainterContext;
 class FunctionCall : public Expression
 {
 public:
-	FunctionCall(const QString &functionName, PainterContext* context);
+	FunctionCall(const QString &functionName, Scope* scope);
 	virtual ~FunctionCall();
 
-	QVariant::Type type() const;
+	virtual QVariant::Type type() const;
 
-	QVariant evaluate();
+	virtual QVariant evaluate();
 
 	void addParameter(Expression* expression);
 
-private:
+protected:
 	QString m_functionName;
 	QList<Expression*> m_parameters;
 };

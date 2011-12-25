@@ -26,14 +26,14 @@ public:
 
 private:
 	ASTNode* parseStatement();
-	Expression* parseFunctionCall(bool fromTerm = false);
+	Expression* parseFunctionCall(const QString &qualifiedIdentifier = QString());
 	ASTNode* parseVariableAssignment();
 	Expression* parseTerm();
 	Expression* parseUnaryExpression();
 	Expression* parseMultiplicativeExpression();
 	Expression* parseAdditiveExpression();
 	Expression* parseExpression();
-	Scope *parseQualifiedIdentifier(bool firstIdentifierIsParsed = false);
+	QString parseQualifiedIdentifier(bool firstIdentifierIsParsed = false);
 
 private:
 	void getNextToken();

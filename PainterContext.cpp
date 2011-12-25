@@ -1,33 +1,33 @@
 #include "PainterContext.h"
 
-#include "PainterCommand.h"
+//Qt includes
+#include <QtGui/QColor>
+#include <QtGui/QPainter>
 
+// Local includes
+#include "BindingMacros.h"
+#include "ClassConstructor.h"
+#include "ClassScope.h"
 #include "Expression.h"
 
+template<>
+QVariant ClassScope<QPainter>::asQVariant() const
+{
+	return QVariant();
+}
+
 PainterContext::PainterContext()
+	: ClassScope<QPainter>(new PainterClassPrototype)
 {
 	bindEnums();
-	bindFunctions();
+
+	bindQColor();
 }
 
 PainterContext::~PainterContext()
 {
-	qDeleteAll(m_functions);
-}
-
-bool PainterContext::isValidFunction(const QString &functionName) const
-{
-	return m_functions.contains(functionName);
-}
-
-PainterCommand* PainterContext::function(const QString &functionName) const
-{
-	return m_functions.value(functionName);
-}
-
-void PainterContext::setFunction(const QString &functionName, PainterCommand* function)
-{
-	m_functions.insert(functionName, function);
+	m_classInstance = 0;
+	delete m_prototype;
 }
 
 void PainterContext::bindEnums()
@@ -56,7 +56,79 @@ void PainterContext::bindEnums()
 	END_BIND_ENUM(GlobalColor)
 }
 
-void PainterContext::bindFunctions()
+void PainterContext::bindQColor()
+{
+	BEGIN_BIND_CLASS(QColor)
+		BIND_CLASS_FUNCTION_0(QColor,int,alpha);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,alphaF);
+		BIND_CLASS_FUNCTION_0(QColor,int,black);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,blackF);
+		BIND_CLASS_FUNCTION_0(QColor,int,blue);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,blueF);
+		//BIND_CLASS_FUNCTION_1(QColor,QColor,convertTo,int);
+		BIND_CLASS_FUNCTION_0(QColor,int,cyan);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,cyanF);
+		BIND_CLASS_FUNCTION_1(QColor,QColor,darker,int);
+		BIND_CLASS_FUNCTION_0(QColor,int,green);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,greenF);
+		BIND_CLASS_FUNCTION_0(QColor,int,hslHue);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,hslHueF);
+		BIND_CLASS_FUNCTION_0(QColor,int,hslSaturation);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,hslSaturationF);
+		BIND_CLASS_FUNCTION_0(QColor,int,hsvHue);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,hsvHueF);
+		BIND_CLASS_FUNCTION_0(QColor,int,hsvSaturation);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,hsvSaturationF);
+		BIND_CLASS_FUNCTION_0(QColor,int,hue);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,hueF);
+		BIND_CLASS_FUNCTION_0(QColor,bool,isValid);
+		BIND_CLASS_FUNCTION_1(QColor,QColor,lighter,int);
+		BIND_CLASS_FUNCTION_0(QColor,int,lightness);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,lightnessF);
+		BIND_CLASS_FUNCTION_0(QColor,int,magenta);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,magentaF);
+		BIND_CLASS_FUNCTION_0(QColor,QString,name);
+		BIND_CLASS_FUNCTION_0(QColor,int,red);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,redF);
+		BIND_CLASS_FUNCTION_0(QColor,QRgb,rgb);
+		BIND_CLASS_FUNCTION_0(QColor,QRgb,rgba);
+		BIND_CLASS_FUNCTION_0(QColor,int,saturation);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,saturationF);
+		BIND_CLASS_PROCEDURE_1(QColor,setAlpha,int);
+		BIND_CLASS_PROCEDURE_1(QColor,setAlphaF,qreal);
+		BIND_CLASS_PROCEDURE_1(QColor,setBlue,int);
+		BIND_CLASS_PROCEDURE_1(QColor,setBlueF,qreal);
+		BIND_CLASS_PROCEDURE_5(QColor,setCmyk,int,int,int,int,int);
+		BIND_CLASS_PROCEDURE_5(QColor,setCmykF,qreal,qreal,qreal,qreal,qreal);
+		BIND_CLASS_PROCEDURE_1(QColor,setGreen,int);
+		BIND_CLASS_PROCEDURE_1(QColor,setGreenF,qreal);
+		BIND_CLASS_PROCEDURE_4(QColor,setHsl,int,int,int,int);
+		BIND_CLASS_PROCEDURE_4(QColor,setHslF,qreal,qreal,qreal,qreal);
+		BIND_CLASS_PROCEDURE_4(QColor,setHsv,int,int,int,int);
+		BIND_CLASS_PROCEDURE_4(QColor,setHsvF,qreal,qreal,qreal,qreal);
+		BIND_CLASS_PROCEDURE_1(QColor,setNamedColor,QString);
+		BIND_CLASS_PROCEDURE_1(QColor,setRed,int);
+		BIND_CLASS_PROCEDURE_1(QColor,setRedF,qreal);
+		BIND_CLASS_PROCEDURE_4(QColor,setRgb,int,int,int,int);
+		//BIND_CLASS_PROCEDURE_4(QColor,setRgb,int); // Add it when overload are supported
+		BIND_CLASS_PROCEDURE_4(QColor,setRgbF,qreal,qreal,qreal,qreal);
+		BIND_CLASS_PROCEDURE_1(QColor,setRgba,int);
+		BIND_CLASS_FUNCTION_0(QColor,int,spec);
+		BIND_CLASS_FUNCTION_0(QColor,QColor,toCmyk);
+		BIND_CLASS_FUNCTION_0(QColor,QColor,toHsl);
+		BIND_CLASS_FUNCTION_0(QColor,QColor,toHsv);
+		BIND_CLASS_FUNCTION_0(QColor,QColor,toRgb);
+		BIND_CLASS_FUNCTION_0(QColor,int,value);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,valueF);
+		BIND_CLASS_FUNCTION_0(QColor,int,yellow);
+		BIND_CLASS_FUNCTION_0(QColor,qreal,yellowF);
+	END_BIND_CLASS(QColor)
+
+	BIND_CLASS_CONSTRUCTOR_0(QColor);
+}
+
+PainterClassPrototype::PainterClassPrototype()
+: ClassPrototype<QPainter>()
 {
 	BIND_PAINTER_PROCEDURE_6(drawArc,int,int,int,int,int,int);
 	BIND_PAINTER_PROCEDURE_6(drawChord,int,int,int,int,int,int);
@@ -79,6 +151,8 @@ void PainterContext::bindFunctions()
 	BIND_PAINTER_PROCEDURE_2(shear, qreal,qreal);
 	BIND_PAINTER_PROCEDURE_2(translate,qreal,qreal);
 	BIND_PAINTER_PROCEDURE_1(setPen, QColor);
+
+	BIND_PAINTER_PROCEDURE_5(fillRect,int,int,int,int,QColor);
 
 	BIND_PAINTER_FUNCTION_0(bool, hasClipping);
 	BIND_PAINTER_FUNCTION_0(bool, isActive);

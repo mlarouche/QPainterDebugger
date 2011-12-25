@@ -14,6 +14,15 @@ VariableAssignment::~VariableAssignment()
 
 QVariant VariableAssignment::evaluate()
 {
-	context()->setVariable(m_variableName, m_expression->evaluate());
+	QVariant expressionValue = m_expression->evaluate();
+	if(expressionValue.canConvert<ClassInstance>())
+	{
+		ClassInstance instance = expressionValue.value<ClassInstance>();
+		context()->addScope(m_variableName, instance.classInstance);
+	}
+	else
+	{
+		context()->setVariable(m_variableName, m_expression->evaluate());
+	}
 	return QVariant();
 }

@@ -13,7 +13,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         QPainterDebuggerMainWindow.cpp \
     PainterContext.cpp \
-    PainterCommand.cpp \
     Lexer.cpp \
     Parser.cpp \
     ASTNode.cpp \
@@ -27,11 +26,11 @@ SOURCES += main.cpp\
     UnaryExpression.cpp \
     NameMangling.cpp \
     DSLHighlighter.cpp \
-    Scope.cpp
+    Scope.cpp \
+    ConstructorCall.cpp
 
 HEADERS  += QPainterDebuggerMainWindow.h \
     PainterContext.h \
-    PainterCommand.h \
     Lexer.h \
     Parser.h \
     ASTNode.h \
@@ -45,9 +44,32 @@ HEADERS  += QPainterDebuggerMainWindow.h \
     UnaryExpression.h \
     NameMangling.h \
     DSLHighlighter.h \
-    Scope.h
+    Scope.h \
+    ClassScope.h \
+    BindedFunction.h \
+    ClassPrototype.h \
+    ConstructorCall.h \
+    ClassConstructor.h \
+    BindingMacros.h
 
 FORMS    += QPainterDebuggerMainWindow.ui
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

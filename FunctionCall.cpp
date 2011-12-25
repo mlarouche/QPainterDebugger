@@ -2,11 +2,10 @@
 
 // Local includes
 #include "Expression.h"
-#include "PainterCommand.h"
 #include "PainterContext.h"
 #include "NameMangling.h"
 
-FunctionCall::FunctionCall(const QString &functionName, PainterContext* context)
+FunctionCall::FunctionCall(const QString &functionName, Scope* context)
 : Expression(context), m_functionName(functionName)
 {
 }
@@ -28,16 +27,18 @@ void FunctionCall::addParameter(Expression* expression)
 
 QVariant FunctionCall::evaluate()
 {
+	Scope* scopeToUse;
+	QString functionName = context()->findIdentifierAndScope(m_functionName, scopeToUse);
+
 	QVariant returnValue;
 
-	PainterContext* painterContext = static_cast<PainterContext*>(context());
-	if(painterContext->isValidFunction(m_functionName))
+	if(scopeToUse->isValidFunction(functionName))
 	{
-		returnValue = painterContext->function(m_functionName)->execute(painterContext->painter(), m_parameters);
+		returnValue = scopeToUse->execute(functionName, m_parameters);
 	}
 	else
 	{
-		showErrorMessage(QString("%1 is not a valid function name").arg(m_functionName));
+		showErrorMessage(QString("%1 is not a valid function name").arg(functionName));
 	}
 
 	return returnValue;

@@ -16,11 +16,22 @@ QVariant::Type IdentifierExpression::type() const
 
 QVariant IdentifierExpression::evaluate()
 {
-	if(!context()->hasVariable(m_identifier))
-	{
-		showErrorMessage(QString("%1 is not defined.").arg(m_identifier));
-		return QVariant();
-	}
+	Scope* scopeToUse;
+	QString identifier = context()->findIdentifierAndScope(m_identifier, scopeToUse);
 
-	return context()->variable(m_identifier);
+	bool isClass = scopeToUse->hasScope(identifier);
+	if(isClass)
+	{
+		return scopeToUse->scope(identifier)->asQVariant();
+	}
+	else
+	{
+		if(!scopeToUse->hasVariable(identifier))
+		{
+			showErrorMessage(QString("%1 is not defined.").arg(identifier));
+			return QVariant();
+		}
+
+		return scopeToUse->variable(identifier);
+	}
 }
