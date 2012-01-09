@@ -16,7 +16,7 @@ class Scope
 {
 public:
 	Scope();
-	~Scope();
+	virtual ~Scope();
 
 	bool hasVariable(const QString &variableName) const;
 	QVariant variable(const QString &identifier) const;
@@ -38,6 +38,11 @@ public:
 		return false;
 	}
 
+	virtual QMetaType::Type functionReturnType(const QString &/*functionName*/) const
+	{
+		return QMetaType::Void;
+	}
+
 	virtual QVariant execute(const QString &/*functionName*/, const QList<Expression*> &/*parameters*/)
 	{
 		return QVariant();
@@ -56,10 +61,7 @@ public:
 	}
 
 	void addClassConstructor(const QString &constructorName, ClassConstructor* constructor);
-	ClassConstructor* constructor(const QString &constructorName)
-	{
-		return m_constructors.value(constructorName);
-	}
+	ClassConstructor* constructor(const QString &constructorName);
 
 private:
 	QHash<QString,QVariant> m_variables;

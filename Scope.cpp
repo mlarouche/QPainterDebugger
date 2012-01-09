@@ -80,3 +80,8 @@ void Scope::addClassConstructor(const QString &constructorName, ClassConstructor
 {
 	m_constructors.insert(constructorName, constructor);
 }
+
+ClassConstructor* Scope::constructor(const QString &constructorName)
+{
+	return m_constructors.value(constructorName);
+}

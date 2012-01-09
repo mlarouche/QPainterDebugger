@@ -22,12 +22,49 @@ public:
 
 	bool isValidFunction(const QString &functionName) const
 	{
-		return m_functions.contains(functionName);
+		foreach(QString mangledName, m_functions.keys())
+		{
+			int returnIndexOf = mangledName.indexOf('?')+1;
+			int argIndexOf = mangledName.indexOf("|");
+			QString strippedFunctionName = mangledName.mid(returnIndexOf, argIndexOf-returnIndexOf);
+			if(strippedFunctionName.compare(functionName) == 0)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	QMetaType::Type functionReturnType(const QString &functionName) const
+	{
+		foreach(QString mangledName, m_functions.keys())
+		{
+			int returnIndexOf = mangledName.indexOf('?')+1;
+			int argIndexOf = mangledName.indexOf("|");
+			QString strippedFunctionName = mangledName.mid(returnIndexOf, argIndexOf-returnIndexOf);
+			if(strippedFunctionName.compare(functionName) == 0)
+			{
+				QString returnType = mangledName.left(mangledName.indexOf("?"));
+				return (QMetaType::Type)QMetaType::type(qPrintable(returnType));
+			}
+		}
+
+		return QMetaType::Void;
 	}
 
 	BindedFunction<T>* function(const QString &functionName) const
 	{
-		return m_functions.value(functionName);
+		foreach(QString mangledName, m_functions.keys())
+		{
+			QString functionNameWithNoReturnType = mangledName.mid(mangledName.indexOf('?'));
+			if(functionNameWithNoReturnType.compare(functionName) == 0)
+			{
+				return m_functions.value(mangledName);
+			}
+		}
+
+		return NULL;
 	}
 
 	void setFunction(const QString &functionName, BindedFunction<T>* function)

@@ -42,16 +42,8 @@ void QPainterDebuggerMainWindow::buttonDebug_Clicked()
 
 	QString readCode = ui->textEditCode->toPlainText();
 
-	Scope *thisScope = new Scope;
-
-	Scope* pointScope = new Scope;
-	pointScope->setVariable("x", 10);
-	pointScope->setVariable("y", "25");
-	thisScope->addScope("Point", pointScope);
-
 	PainterContext context;
 	context.setPainter(&painter);
-	context.addScope("this", thisScope);
 
 	Parser parser;
 	parser.setContext(&context);

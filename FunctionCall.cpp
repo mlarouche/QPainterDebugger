@@ -17,7 +17,10 @@ FunctionCall::~FunctionCall()
 
 QVariant::Type FunctionCall::type() const
 {
-	return QVariant::UserType;
+	Scope* scopeToUse;
+	QString functionName = context()->findIdentifierAndScope(m_functionName, scopeToUse);
+
+	return (QVariant::Type)scopeToUse->functionReturnType(functionName);
 }
 
 void FunctionCall::addParameter(Expression* expression)

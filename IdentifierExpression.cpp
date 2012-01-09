@@ -11,7 +11,23 @@ IdentifierExpression::~IdentifierExpression()
 
 QVariant::Type IdentifierExpression::type() const
 {
-	return context()->variable(m_identifier).type();
+	Scope* scopeToUse;
+	QString identifier = context()->findIdentifierAndScope(m_identifier, scopeToUse);
+
+	bool isClass = scopeToUse->hasScope(identifier);
+	if(isClass)
+	{
+		return scopeToUse->scope(identifier)->asQVariant().type();
+	}
+	else
+	{
+		if(!scopeToUse->hasVariable(identifier))
+		{
+			return QVariant::Invalid;
+		}
+
+		return scopeToUse->variable(identifier).type();
+	}
 }
 
 QVariant IdentifierExpression::evaluate()

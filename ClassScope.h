@@ -10,6 +10,7 @@
 #include "BindedFunction.h"
 #include "ClassPrototype.h"
 #include "Expression.h"
+#include "NameMangling.h"
 
 template<class T>
 class ClassScope : public Scope
@@ -35,10 +36,23 @@ public:
 		return m_prototype->isValidFunction(functionName);
 	}
 
+	QMetaType::Type functionReturnType(const QString &functionName) const
+	{
+		return m_prototype->functionReturnType(functionName);
+	}
+
 	QVariant execute(const QString &functionName, const QList<Expression*> &parameters)
 	{
-		BindedFunction<T> *function = m_prototype->function(functionName);
-		return function->execute(m_classInstance, parameters);
+		QString mangledFunctionName = NameMangling::mangleFunctionName(functionName,parameters);
+		BindedFunction<T> *function = m_prototype->function(mangledFunctionName);
+		if(function)
+		{
+			return function->execute(m_classInstance, parameters);
+		}
+		else
+		{
+			return QVariant();
+		}
 	}
 
 	T* m_classInstance;
@@ -48,3 +62,4 @@ protected:
 };
 
 #endif
+

@@ -17,23 +17,9 @@ QString NameMangling::mangleFunctionName(const QString &functionName, const QLis
 
 	foreach(int type, parametersTypes)
 	{
-		QString typeName;
-		switch(type)
-		{
-			case QVariant::Bool:
-				typeName = QLatin1String("|bool");
-				break;
-			case QVariant::Int:
-				typeName = QLatin1String("|int");
-				break;
-			case QVariant::Double:
-				typeName = QLatin1String("|qreal");
-				break;
-			case QVariant::String:
-				typeName = QLatin1String("|QString");
-				break;
-		}
+		QString typeName(QMetaType::typeName(type));
 
+		result += '|';
 		result += typeName;
 	}
 
